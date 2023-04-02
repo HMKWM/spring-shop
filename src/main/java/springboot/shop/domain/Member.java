@@ -9,10 +9,10 @@ import java.util.Objects;
 @Getter @Setter
 @EqualsAndHashCode
 public class Member {
-    private String id;
+    private Long memberId;
+    private String email;
     private String password;
     private String name;
-    private String email;
     private String address;
     private Role role;
 
@@ -20,15 +20,15 @@ public class Member {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(memberId, password, name, email, address);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Member member = (Member) o;
-        return Objects.equals(id, member.id) && Objects.equals(name, member.name) && Objects.equals(email, member.email) && Objects.equals(address, member.address);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, password, name, email, address);
+        return Objects.equals(email, member.email) && Objects.equals(password, member.password) && Objects.equals(name, member.name) && Objects.equals(address, member.address) && role == member.role;
     }
 }

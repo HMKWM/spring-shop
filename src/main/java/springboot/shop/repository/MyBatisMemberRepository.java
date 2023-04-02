@@ -3,6 +3,8 @@ package springboot.shop.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import springboot.shop.domain.Member;
+import springboot.shop.domain.PageHandler;
+import springboot.shop.domain.SearchCond;
 import springboot.shop.repository.mapper.MemberMapper;
 
 import java.util.List;
@@ -21,13 +23,18 @@ public class MyBatisMemberRepository implements MemberRepository{
     }
 
     @Override
-    public Member findById(String id) {
+    public Member findById(Long id) {
         return memberMapper.findById(id);
     }
 
     @Override
-    public List<Member> findAll() {
-        return memberMapper.findAll();
+    public Member findByEmail(String email) {
+        return memberMapper.findByEmail(email);
+    }
+
+    @Override
+    public List<Member> findAll(PageHandler ph) {
+        return memberMapper.findAll(ph);
     }
 
     @Override
@@ -36,7 +43,12 @@ public class MyBatisMemberRepository implements MemberRepository{
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(Long id) {
         memberMapper.delete(id);
+    }
+
+    @Override
+    public int count() {
+        return memberMapper.count();
     }
 }

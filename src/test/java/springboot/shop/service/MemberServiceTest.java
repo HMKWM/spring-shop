@@ -33,10 +33,9 @@ class MemberServiceTest {
     @Transactional
     void saveMember(){
         Member member = new Member();
-        member.setId("test1");
+        member.setEmail("test");
         member.setPassword("password");
         member.setName("testName");
-        member.setEmail("test@test.com");
         member.setAddress("testAddress");
         member.setRole(Role.USER);
 

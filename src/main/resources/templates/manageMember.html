@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    회원 관리 페이지입니다.
+    <table>
+        <thead>
+            <tr>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>주소</th>
+            </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="member : ${memberList}" >
+            <tr>
+                <td th:text="${member.id}">아이디</td>
+                <td th:text="${member.name}">이름</td>
+                <td th:text="${member.email}">이메일</td>
+                <td th:text="${member.address}">주소</td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</body>
+</html>

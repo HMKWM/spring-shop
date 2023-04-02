@@ -6,11 +6,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import springboot.shop.domain.Member;
-import springboot.shop.domain.MemberAdapter;
-import springboot.shop.domain.MemberForm;
-import springboot.shop.domain.Role;
+import springboot.shop.domain.*;
 import springboot.shop.repository.MemberRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,28 +26,37 @@ public class MemberService implements UserDetailsService{
     }
 
     private boolean isDuplicateMember(Member member){
-        return memberRepository.findById(member.getId()) != null;
+        return memberRepository.findById(member.getMemberId()) != null;
     }
 
     public Member creatMember(MemberForm memberForm){
         Member member = new Member();
-        member.setId(memberForm.getId());
+        member.setEmail(memberForm.getEmail());
         member.setPassword(passwordEncoder.encode(memberForm.getPassword()));
         member.setName(memberForm.getName());
-        member.setEmail(memberForm.getEmail());
         member.setAddress(memberForm.getAddress());
         member.setRole(Role.USER);
         return member;
     }
 
+    public List<Member> findAll(SearchCond cond){
+        int pageSize = 10;
+        int naviSize = 10;
+        int count = memberRepository.count();
+
+        cond.setPageSize(pageSize);
+        PageHandler ph = new PageHandler(count, naviSize, cond);
+        return memberRepository.findAll(ph);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findById(username);
+        Member member = memberRepository.findByEmail(username);
 
         if(member==null){
             throw new UsernameNotFoundException(username);
         }
 
-        return new MemberAdapter(member);
+        return new MemberAdaptor(member);
     }
 }

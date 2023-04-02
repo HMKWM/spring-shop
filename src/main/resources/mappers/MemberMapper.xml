@@ -2,25 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="springboot.shop.repository.mapper.MemberMapper">
-    <insert id="save" useGeneratedKeys="true" keyProperty="id">
-        insert into member(id, password, name, email, address, role)
-        values (#{id}, #{password}, #{name}, #{email}, #{address}, #{role})
+    <insert id="save" useGeneratedKeys="true" keyProperty="memberId">
+        insert into member(email, password, name, address, role)
+        values (#{email}, #{password}, #{name}, #{address}, #{role})
     </insert>
     <select id="findById" resultType="Member">
-        select id, password, name, email, address, role from member where id = #{id}
+        select member_id, email, password, name, address, role from member where member_id = #{id}
+    </select>
+    <select id="findByEmail" resultType="Member">
+        select member_id, email, password, name, address, role from member where email = #{email}
     </select>
     <select id="findAll" resultType="Member">
-        select id, password, name, email, address, role from member;
+        select member_id, email, password, name, address, role
+        from member
+        <where>
+            <if test="cond.keyword != null">
+                and title like concat('%', #{cond.keyword}, '%')
+            </if>
+            and role != 'ADMIN'
+        </where>
+        limit #{cond.offset}, #{cond.pageSize}
     </select>
     <update id="update">
         update member
-        set password = #{password},
+        set email = #{email},
+            password = #{password},
             name = #{name},
-            email = #{email},
             address = #{address}
-        where id = #{id}
+        where member_id = #{memberId}
     </update>
     <delete id="delete">
-        delete from member where id = #{id} and role != 'ADMIN'
+        delete from member where member_id = #{id} and role != 'ADMIN'
     </delete>
+    <select id="count" resultType="Integer">
+        select count(*) from member where role != 'ADMIN'
+    </select>
 </mapper>

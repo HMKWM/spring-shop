@@ -20,9 +20,8 @@ class MemberRepositoryTest {
 
     @BeforeEach
     void before(){
-        member.setId("testId");
+        member.setEmail("test1");
         member.setPassword("testPassword");
-        member.setEmail("test@test");
         member.setAddress("testAddress");
         member.setName("testName");
         member.setRole(Role.USER);
@@ -32,7 +31,7 @@ class MemberRepositoryTest {
     @Transactional
     void createAndRead() {
         memberRepository.save(member);
-        Member findMember = memberRepository.findById(member.getId());
+        Member findMember = memberRepository.findById(member.getMemberId());
         Assertions.assertThat(findMember).isEqualTo(member);
     }
 
@@ -42,7 +41,7 @@ class MemberRepositoryTest {
         memberRepository.save(member);
         member.setName("test update");
         memberRepository.update(member);
-        Member updateMember = memberRepository.findById(member.getId());
+        Member updateMember = memberRepository.findById(member.getMemberId());
         Assertions.assertThat(updateMember).isEqualTo(member);
     }
 
@@ -50,8 +49,8 @@ class MemberRepositoryTest {
     @Transactional
     void delete() {
         memberRepository.save(member);
-        memberRepository.delete(member.getId());
-        Member deleteMember = memberRepository.findById(member.getId());
+        memberRepository.delete(member.getMemberId());
+        Member deleteMember = memberRepository.findById(member.getMemberId());
         Assertions.assertThat(deleteMember).isNull();
     }
 

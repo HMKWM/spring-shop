@@ -1,6 +1,8 @@
 package springboot.shop.repository;
 
 import springboot.shop.domain.Member;
+import springboot.shop.domain.PageHandler;
+import springboot.shop.domain.SearchCond;
 
 import java.util.List;
 
@@ -8,11 +10,15 @@ public interface MemberRepository {
 
     Member save(Member member);
 
-    Member findById(String id);
+    Member findById(Long id);
 
-    List<Member> findAll();
+    Member findByEmail(String email);
+
+    List<Member> findAll(PageHandler ph);
 
     void update(Member member);
 
-    void delete(String id);
+    void delete(Long id);
+
+    int count();
 }
