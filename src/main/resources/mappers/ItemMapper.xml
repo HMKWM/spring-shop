@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="springboot.shop.repository.mapper.ItemMapper">
+    <insert id="save" useGeneratedKeys="true" keyProperty="itemId">
+        insert into item(name, price, quantity, content, create_date, update_date)
+        values (#{name}, #{price}, #{quantity}, #{content}, now(), now())
+    </insert>
+    <select id="findById" resultType="Item">
+        select item_id, name, price, quantity, content, create_date, update_date from item where item_id = #{id}
+    </select>
+    <select id="findAll" resultType="Item">
+        select item_id, name, price, quantity, content, create_date, update_date
+        from item
+        <where>
+            <if test="cond.keyword != null">
+                and title like concat('%', #{cond.keyword}, '%')
+            </if>
+        </where>
+        limit #{cond.offset}, #{cond.pageSize}
+    </select>
+    <select id="count" resultType="Integer">
+        select count(*)
+        from item
+        <where>
+            <if test="keyword != null">
+                and title like concat('%', #{cond.keyword}, '%')
+            </if>
+        </where>
+    </select>
+    <update id="update">
+        update item
+        set name = #{name},
+            price = #{price},
+            quantity = #{quantity},
+            content = #{content},
+            update_date = now()
+        where item_id = #{itemId}
+    </update>
+    <delete id="delete">
+        delete from item where item_id = #{id}
+    </delete>
+</mapper>

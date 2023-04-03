@@ -29,7 +29,7 @@ class MemberRepositoryTest {
 
     @Test
     @Transactional
-    void createAndRead() {
+    void saveAndFind() {
         memberRepository.save(member);
         Member findMember = memberRepository.findById(member.getMemberId());
         Assertions.assertThat(findMember).isEqualTo(member);

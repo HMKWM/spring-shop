@@ -24,12 +24,12 @@ public class MemberController {
 
     @GetMapping("/signup")
     public String registerForm(Model model){
-        model.addAttribute("member", new MemberForm());
+        model.addAttribute("memberForm", new MemberForm());
         return "signupForm";
     }
 
     @PostMapping("/signup")
-    public String register(@Valid @ModelAttribute("member") MemberForm memberForm,
+    public String register(@Valid @ModelAttribute("memberForm") MemberForm memberForm,
                            BindingResult bindingResult){
         log.info("===회원가입 시도===");
         if(bindingResult.hasErrors()){
@@ -55,7 +55,7 @@ public class MemberController {
         return "loginForm";
     }
 
-    @GetMapping("/manage")
+    @GetMapping("/members")
     public String manageMember(@ModelAttribute SearchCond cond, Model model){
         List<Member> memberList = memberService.findAll(cond);
         model.addAttribute("memberList", memberList);
