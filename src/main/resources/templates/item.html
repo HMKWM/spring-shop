@@ -10,21 +10,49 @@
     <th:block th:replace="~{fragment/header :: header(${member!=null ? member : null})}"></th:block>
 
 <div th:object="${item}">
-    <span>이미지 들어가야함</span>
+    <th:block th:each="image : ${item.itemImageList}">
+        <img th:src="@{'/images/'+${image.imgName}}" width="200" height="200"/>
+    </th:block>
     <div>
-        <span th:text="*{name}"></span>
+        <span id="name" th:text="*{name}"></span>
     </div>
     <div>
-        <span th:text="*{price+'원'}"></span>
+        <span id="price" th:text="*{price+'원'}"></span>
     </div>
     <div>
-        <span th:text="*{content}"></span>
+        <span id="quantity" th:text="*{'남은수량 ' + quantity+'개'}"></span>
     </div>
     <div>
-        <span th:text="*{quantity+'개'}"></span>
+        <span id="content" th:text="*{'상품설명'+content}"></span>
     </div>
+    <form method="post">
+        <span>구매 수량</span>
+        <input type="number" value="1" min="1" />
+        <button type="submit">구입</button>
+        <button id="cart" type="button" onclick="addCart()">장바구니</button>
+    </form>
 </div>
-
-
 </body>
 </html>
+<script th:inline="javascript">
+    function addCart(){
+        fetch("/cart",{
+            method:"Post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify({
+                name:"",
+                count:""
+            })
+        }).then(response=>{
+            if(response.status==200){
+                alert("성공했습니다.");
+            } else {
+                alert("실패했습니다.")
+            }
+        })
+
+    }
+
+</script>

@@ -14,6 +14,6 @@
 <body>
     <th:block th:replace="~{fragment/header :: header(${member!=null ? member : null})}"></th:block>
 
-    <th:block th:replace="~{fragment/album :: album(${itemList})}"></th:block>
+    <th:block th:replace="~{fragment/album :: album(${itemList}, ${pageHandler})}"></th:block>
 </body>
 </html>

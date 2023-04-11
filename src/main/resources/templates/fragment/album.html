@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-    <div class="album py-5 bg-light" th:fragment="album(itemList)">
+<th:block th:fragment="album(itemList, pageHandler)">
+    <div class="album py-5 bg-light" >
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <th:block th:each="item : ${itemList}">
                     <div class="col item" th:data-id="${item.itemId}" th:onclick="|location.href='/items/${item.itemId}'|">
                         <div class="card shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="자리표시자: 썸네일" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">이미지</text></svg>
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="자리표시자: 썸네일" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                <image th:href="@{'/images/'+${item.itemImageList.get(0).imgName}}" width="100%" height="100%" />
+                                <title>Placeholder</title>
+                            </svg>
                             <div class="card-body">
                                 <p class="card-text" th:text="${item.name}">라면<hr class="my-3"></p>
                                 <p th:text="${item.price}+'원'">40000억원</p>
@@ -18,5 +22,19 @@
             </div>
         </div>
     </div>
+    <nav class="bg-light" aria-label="Page navigation example">
+        <ul th:object="${pageHandler}" class="pagination justify-content-center" style="margin-bottom: 0px;padding-bottom: 16px;">
+            <li th:class="'page-item ' + ${pageHandler.isShowNext() ? '':'disabled'}" class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&lt;</a>
+            </li>
+            <th:block th:each="number : *{#numbers.sequence(beginPage, endPage)}">
+                <li class="page-item"><a class="page-link" th:href="@{/(page=${number},keyword=${keyword})}" th:text="${number}">1</a></li>
+            </th:block>
+            <li th:class="'page-item ' + ${pageHandler.isShowNext() ? '':'disabled'}" class="page-item">
+                <a class="page-link" href="#">&gt;</a>
+            </li>
+        </ul>
+    </nav>
+</th:block>
 </body>
 </html>

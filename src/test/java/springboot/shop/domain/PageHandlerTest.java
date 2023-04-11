@@ -12,7 +12,6 @@ class PageHandlerTest {
 
         PageHandler ph = new PageHandler(80,5, sc);
 
-        ph.doPaging();
         ph.print();
     }
 }

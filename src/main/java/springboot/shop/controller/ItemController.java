@@ -35,6 +35,7 @@ public class ItemController {
 
         model.addAttribute("member", memberAdaptor.getMember());
         model.addAttribute("item",item);
+
         return "item";
     }
 

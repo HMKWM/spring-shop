@@ -1,21 +1,25 @@
 package springboot.shop.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import springboot.shop.domain.Member;
-import springboot.shop.domain.Role;
+import springboot.shop.domain.*;
+import springboot.shop.repository.mapper.CartItemMapper;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    CartItemMapper cartMapper;
+
     Member member = new Member();
 
     @BeforeEach
@@ -32,7 +36,7 @@ class MemberRepositoryTest {
     void saveAndFind() {
         memberRepository.save(member);
         Member findMember = memberRepository.findById(member.getMemberId());
-        Assertions.assertThat(findMember).isEqualTo(member);
+        assertThat(findMember).isEqualTo(member);
     }
 
     @Test
@@ -42,7 +46,7 @@ class MemberRepositoryTest {
         member.setName("test update");
         memberRepository.update(member);
         Member updateMember = memberRepository.findById(member.getMemberId());
-        Assertions.assertThat(updateMember).isEqualTo(member);
+        assertThat(updateMember).isEqualTo(member);
     }
 
     @Test
@@ -51,7 +55,10 @@ class MemberRepositoryTest {
         memberRepository.save(member);
         memberRepository.delete(member.getMemberId());
         Member deleteMember = memberRepository.findById(member.getMemberId());
-        Assertions.assertThat(deleteMember).isNull();
+        assertThat(deleteMember).isNull();
     }
 
+    @Test
+    void test(){
+    }
 }

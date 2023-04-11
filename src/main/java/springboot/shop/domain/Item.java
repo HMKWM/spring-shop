@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -16,6 +17,8 @@ public class Item {
     private String content;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+
+    private List<ItemImage> itemImageList;
 
     @Override
     public boolean equals(Object o) {

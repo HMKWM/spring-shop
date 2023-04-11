@@ -2,32 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="springboot.shop.repository.mapper.ItemMapper">
+
     <insert id="save" useGeneratedKeys="true" keyProperty="itemId">
         insert into item(name, price, quantity, content, create_date, update_date)
         values (#{name}, #{price}, #{quantity}, #{content}, now(), now())
     </insert>
-    <select id="findById" resultType="Item">
+
+    <resultMap id="itemResult" type="Item">
+        <result property="itemId" column="item_id" />
+        <result property="name" column="name" />
+        <result property="price" column="price" />
+        <result property="quantity" column="quantity" />
+        <result property="createDate" column="create_date" />
+        <result property="updateDate" column="update_date" />
+        <collection property="itemImageList" column="item_id" javaType="java.util.ArrayList"
+                    ofType="ItemImage" select="findImageListById" />
+    </resultMap>
+    <select id="findById" resultMap="itemResult">
         select item_id, name, price, quantity, content, create_date, update_date from item where item_id = #{id}
     </select>
-    <select id="findAll" resultType="Item">
+    <select id="findImageListById" resultType="ItemImage">
+        select item_img_id, item_id, img_name, origin_img_name, paths, orders, create_date, update_date
+        from item_img where item_id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="itemResult">
         select item_id, name, price, quantity, content, create_date, update_date
         from item
         <where>
             <if test="cond.keyword != null">
-                and title like concat('%', #{cond.keyword}, '%')
+                and name like concat('%', #{cond.keyword}, '%')
             </if>
         </where>
         limit #{cond.offset}, #{cond.pageSize}
     </select>
+
     <select id="count" resultType="Integer">
         select count(*)
         from item
         <where>
             <if test="keyword != null">
-                and title like concat('%', #{cond.keyword}, '%')
+                and name like concat('%', #{cond.keyword}, '%')
             </if>
         </where>
     </select>
+
     <update id="update">
         update item
         set name = #{name},
@@ -37,7 +56,9 @@
             update_date = now()
         where item_id = #{itemId}
     </update>
+
     <delete id="delete">
         delete from item where item_id = #{id}
     </delete>
+
 </mapper>
