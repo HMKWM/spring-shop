@@ -1,17 +1,13 @@
-package springboot.shop.repository.mapper;
+package springboot.shop.repository;
 
-import org.apache.ibatis.annotations.Mapper;
 import springboot.shop.domain.CartItem;
 import springboot.shop.domain.CartItemList;
-import springboot.shop.domain.Item;
 import springboot.shop.domain.PageHandler;
 
 import java.util.List;
 
-@Mapper
-public interface CartItemMapper {
-
-    void save(CartItem cartItem);
+public interface CartItemRepository {
+    CartItem save(CartItem cartItem);
 
     CartItemList findById(Long id);
 

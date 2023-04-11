@@ -34,8 +34,8 @@ class MyBatisItemRepositoryTest {
 
         ItemImage img = new ItemImage();
         img.setItemId(item.getItemId());
-        img.setImgName("test이미지");
-        img.setOriginImgName("test이미지");
+        img.setImgName("test 이미지");
+        img.setOriginImgName("test 이미지");
         img.setPaths("/test");
         img.setOrders(0);
 

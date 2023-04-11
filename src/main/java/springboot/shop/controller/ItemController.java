@@ -54,6 +54,9 @@ public class ItemController {
         }
 
 
+        Item item = itemService.createItem(itemForm);
+        itemService.saveItem(item, itemImgList);
+
 
         return "redirect:/";
     }

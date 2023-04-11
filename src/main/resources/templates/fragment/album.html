@@ -8,7 +8,7 @@
                 <th:block th:each="item : ${itemList}">
                     <div class="col item" th:data-id="${item.itemId}" th:onclick="|location.href='/items/${item.itemId}'|">
                         <div class="card shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="자리표시자: 썸네일" preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img" aria-label="자리표시자: 썸네일" preserveAspectRatio="xMidYMid slice" focusable="false">
                                 <image th:href="@{'/images/'+${item.itemImageList.get(0).imgName}}" width="100%" height="100%" />
                                 <title>Placeholder</title>
                             </svg>

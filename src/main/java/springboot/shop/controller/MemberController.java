@@ -55,6 +55,9 @@ public class MemberController {
         return "loginForm";
     }
 
+//    @PostMapping("/login")
+
+
     @GetMapping("/members")
     public String manageMember(@ModelAttribute SearchCond cond, Model model){
         List<Member> memberList = memberService.findAll(cond);

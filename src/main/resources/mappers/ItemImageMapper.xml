@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="springboot.shop.repository.mapper.ItemImageMapper">
+    <insert id="save" useGeneratedKeys="true" keyProperty="itemImgId">
+        insert into item_img(item_id, img_name, origin_img_name, paths, orders, create_date, update_date)
+        values (#{itemId}, #{imgName}, #{originImgName}, #{paths}, #{orders}, now(), now())
+    </insert>
+    <update id="update">
+        update item_img
+        set item_id = #{itemId},
+            img_name = #{itemName},
+            origin_img_name = #{paths},
+            orders = #{orders},
+            update_date = now()
+        where item_img_id = #{itemImgId};
+    </update>
+    <delete id="delete">
+        delete from item_img where item_img_id = #{itemImgId};
+    </delete>
+</mapper>

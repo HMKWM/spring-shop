@@ -11,15 +11,16 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //authentication
         http.authorizeHttpRequests()
-                .antMatchers("/", "/signup", "/login").permitAll()
+                .antMatchers("/", "/signup", "/login","/images/**").permitAll()
                 .antMatchers("/manage").hasRole("ADMIN")
+                .antMatchers("/carts/**").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated();
 
         //login
@@ -34,6 +35,7 @@ public class SecurityConfig{
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/");
+
         return http.build();
     }
 
@@ -42,7 +44,7 @@ public class SecurityConfig{
         //web security
         //우선 순위가 높음
         return (web) -> web.ignoring()
-                .antMatchers("/css/**", "/*.ico", "/error");
+                .antMatchers("/css/**", "/*.ico", "/error", "/images/**");
     }
 
     @Bean

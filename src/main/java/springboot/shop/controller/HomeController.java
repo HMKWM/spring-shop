@@ -8,6 +8,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import springboot.shop.domain.*;
@@ -23,10 +24,17 @@ public class HomeController {
 
     private final ItemService itemService;
 
+    @ModelAttribute
+    public Member member(@AuthenticationPrincipal MemberAdaptor memberAdaptor){
+        if(memberAdaptor == null){
+            return null;
+        }
+        return memberAdaptor.getMember();
+    }
+
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal MemberAdaptor memberAdaptor, Model model,
-                       @RequestParam(defaultValue="1" ,required = false) Integer page,
-                       @RequestParam(required = false) String keyword){
+    public String home(@RequestParam(defaultValue="1" ,required = false) Integer page,
+                       @RequestParam(required = false) String keyword, Model model){
 
         int count = itemService.count(keyword);
 
@@ -39,14 +47,6 @@ public class HomeController {
 
         model.addAttribute("pageHandler", ph);
         model.addAttribute("itemList", itemList);
-
-
-        if(memberAdaptor != null){
-            Member member = memberAdaptor.getMember();
-            model.addAttribute("member", member);
-            log.info("auth={}", memberAdaptor.getAuthorities());
-            return "loginHome";
-        }
 
         return "home";
     }

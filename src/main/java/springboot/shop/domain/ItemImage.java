@@ -13,7 +13,7 @@ public class ItemImage {
     private String imgName;
     private String originImgName;
     private String paths;
-    private Integer order;
+    private Integer orders;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 }

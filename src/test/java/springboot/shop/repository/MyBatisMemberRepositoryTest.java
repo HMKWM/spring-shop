@@ -8,12 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import springboot.shop.domain.*;
 import springboot.shop.repository.mapper.CartItemMapper;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-class MemberRepositoryTest {
+class MyBatisMemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;

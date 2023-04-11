@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="springboot.shop.repository.mapper.CartItemMapper">
+    <insert id="save" useGeneratedKeys="true" keyProperty="cartItemId">
+        insert into cart_item(member_id, item_id, count)
+        values (#{memberId}, #{itemId}, #{count})
+    </insert>
+    <select id="findById" resultType="CartItemList">
+        select ci.cart_item_id, ci.item_id, ci.count, i.name, concat(ii.paths, ii.img_name) as img_path
+        from cart_item ci
+        inner join item i on ci.item_id = i.item_id
+        inner join item_img ii on i.item_id = ii.item_id
+        where cart_item_id = #{cartItemId}
+    </select>
+    <select id="findAll" resultType="CartItemList">
+        select ci.cart_item_id, i.name as item_name, i.price, ci.count, ii.img_name
+        from cart_item ci
+        inner join item i on ci.item_id = i.item_id
+        inner join item_img ii on i.item_id = ii.item_id
+        where ci.member_id = #{memberId}
+        order by ci.cart_item_id desc
+    </select>
+    <update id="update">
+        update cart_item
+        set count = #{count}
+        where cart_item_id = #{cartItemId}
+    </update>
+
+    <delete id="delete">
+        delete from cart_item where cart_item_id = #{cartItemId}
+    </delete>
+</mapper>

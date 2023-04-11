@@ -31,7 +31,7 @@
                 <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
                 <th:block th:if="${member != null}">
                 <th:block th:if="${member.role.toString() == 'USER'}">
-                <li><a href="/cart" class="nav-link px-2 text-white">장바구니</a></li>
+                <li><a href="/carts" class="nav-link px-2 text-white">장바구니</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">주문목록</a></li>
                 </th:block>
                 <th:block th:if="${member.role.toString() == 'ADMIN'}">

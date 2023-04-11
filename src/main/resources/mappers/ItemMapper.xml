@@ -7,7 +7,6 @@
         insert into item(name, price, quantity, content, create_date, update_date)
         values (#{name}, #{price}, #{quantity}, #{content}, now(), now())
     </insert>
-
     <resultMap id="itemResult" type="Item">
         <result property="itemId" column="item_id" />
         <result property="name" column="name" />
