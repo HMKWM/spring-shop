@@ -27,6 +27,11 @@ public class MyBatisCartItemRepository implements CartItemRepository{
     }
 
     @Override
+    public List<Long> findByMemberId(Long memberId) {
+        return cartItemMapper.findByMemberId(memberId);
+    }
+
+    @Override
     public List<CartItemList> findAll(Long memberId) {
         return cartItemMapper.findAll(memberId);
     }
@@ -37,7 +42,7 @@ public class MyBatisCartItemRepository implements CartItemRepository{
     }
 
     @Override
-    public void delete(Long id) {
-        cartItemMapper.delete(id);
+    public void delete(List<Long> cartItemIdList) {
+        cartItemMapper.delete(cartItemIdList);
     }
 }

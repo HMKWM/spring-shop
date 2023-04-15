@@ -18,9 +18,10 @@ public class PageHandler {
         this.totalCnt = totalCnt;
         this.naviSize = naviSize;
         this.cond = cond;
+        doPaging();
     }
 
-    public void doPaging(){
+    private void doPaging(){
         totalPage = (int)Math.ceil(totalCnt/(double) cond.getPageSize());
         beginPage = (cond.getPage()-1)/naviSize*naviSize+1;
         endPage = Math.min(beginPage+naviSize-1,totalPage);

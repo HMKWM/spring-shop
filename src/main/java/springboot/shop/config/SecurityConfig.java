@@ -21,6 +21,8 @@ public class SecurityConfig{
                 .antMatchers("/", "/signup", "/login","/images/**").permitAll()
                 .antMatchers("/manage").hasRole("ADMIN")
                 .antMatchers("/carts/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/items/add").hasRole("ADMIN")
+                .antMatchers("/items/delete").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         //login

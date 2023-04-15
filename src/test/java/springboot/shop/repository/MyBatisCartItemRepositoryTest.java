@@ -10,6 +10,9 @@ import springboot.shop.domain.CartItem;
 import springboot.shop.domain.CartItemList;
 import springboot.shop.domain.Item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootTest
 class MyBatisCartItemRepositoryTest {
 
@@ -42,7 +45,9 @@ class MyBatisCartItemRepositoryTest {
         Assertions.assertThat(cartItem.getCartItemId()).isNotNull();
 
         //delete
-        cartItemRepository.delete(cartItem.getCartItemId());
+        List deleteList = new ArrayList<>();
+        deleteList.add(cartItem.getCartItemId());
+        cartItemRepository.delete(deleteList);
 
         //read
         CartItemList findCartItemList = cartItemRepository.findById(cartItem.getCartItemId());

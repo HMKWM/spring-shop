@@ -1,41 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<!--<header class="p-3 text-bg-dark" th:fragment="header">-->
-<!--    <div class="container">-->
-<!--        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">-->
-<!--            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">-->
-<!--                <li><a href="/" class="nav-link px-2 text-white">Home</a></li>-->
-<!--                <li><a href="/" class="nav-link px-2 text-white">Features</a></li>-->
-<!--                <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>-->
-<!--                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>-->
-<!--                <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
-<!--            </ul>-->
-
-<!--            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">-->
-<!--                <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">-->
-<!--            </form>-->
-
-<!--            <div class="text-end">-->
-<!--                <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/login'">로그인</button>-->
-<!--                <button type="button" class="btn btn-warning" onclick="location.href='/signup'">회원가입</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</header>-->
-
 <header class="p-3 text-bg-dark" th:fragment="header(member)">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
                 <th:block th:if="${member != null}">
-                <th:block th:if="${member.role.toString() == 'USER'}">
                 <li><a href="/carts" class="nav-link px-2 text-white">장바구니</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">주문목록</a></li>
-                </th:block>
                 <th:block th:if="${member.role.toString() == 'ADMIN'}">
-                <li><a href="/items/add" class="nav-link px-2 text-white">상품관리</a></li>
+                <li><a href="/items/add" class="nav-link px-2 text-white">상품추가</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">상품관리</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">주문관리</a></li>
                 </th:block>
                 </th:block>
@@ -51,8 +27,10 @@
             </div>
             </th:block>
             <th:block th:unless="${member == null}">
-                <span th:text="${member.name}+'님'"></span>
-                <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/logout'">로그아웃</button>
+            <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
+                <li class="nav-link px-2 text-white"><span th:text="${member.name}+'님'"></span></li>
+                <li class="nav-link px-2 text-white logout"><span onclick="location.href='/logout'">로그아웃</span></li>
+            </ul>
             </th:block>
         </div>
     </div>

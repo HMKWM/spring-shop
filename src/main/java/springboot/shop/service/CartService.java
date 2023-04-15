@@ -18,7 +18,15 @@ public class CartService {
         cartItemRepository.save(cartItem);
     }
 
+    public List<Long> getListByMemberId(Long memberId){
+        return cartItemRepository.findByMemberId(memberId);
+    }
+
     public List<CartItemList> getCartItemList(Long memberId){
         return cartItemRepository.findAll(memberId);
+    }
+
+    public void removeCartItem(List<Long> cartItemIdList){
+        cartItemRepository.delete(cartItemIdList);
     }
 }

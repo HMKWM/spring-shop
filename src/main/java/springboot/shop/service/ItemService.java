@@ -55,5 +55,7 @@ public class ItemService {
         return itemRepository.count(keyword);
     }
 
-
+    public void delete(Long id){
+        itemRepository.delete(id);
+    }
 }

@@ -13,6 +13,11 @@
         inner join item_img ii on i.item_id = ii.item_id
         where cart_item_id = #{cartItemId}
     </select>
+    <select id="findByMemberId" resultType="Long">
+        select cart_item_id
+        from cart_item
+        where member_id = #{memberId}
+    </select>
     <select id="findAll" resultType="CartItemList">
         select ci.cart_item_id, i.name as item_name, i.price, ci.count, ii.img_name
         from cart_item ci
@@ -28,6 +33,9 @@
     </update>
 
     <delete id="delete">
-        delete from cart_item where cart_item_id = #{cartItemId}
+        delete from cart_item where cart_item_id in
+        <foreach collection="list" item="cartItemId" open="(" close=")" separator=",">
+            #{cartItemId}
+        </foreach>
     </delete>
 </mapper>

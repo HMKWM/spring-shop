@@ -11,9 +11,11 @@ public interface CartItemRepository {
 
     CartItemList findById(Long id);
 
+    List<Long> findByMemberId(Long memberId);
+
     List<CartItemList> findAll(Long memberId);
 
     void update(CartItem cartItem);
 
-    void delete(Long id);
+    void delete(List<Long> cartItemIdList);
 }
