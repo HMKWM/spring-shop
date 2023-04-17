@@ -23,9 +23,9 @@ spring boot, mybatis, mysql, gradle, spring security
 
 ## ERD
 
-![image](https://user-images.githubusercontent.com/81468385/232237888-b27ec54f-831a-4f4a-a1d4-d56646c933df.png)
+![image](https://user-images.githubusercontent.com/81468385/232548471-8c031baa-bd16-45bc-8eb8-c43796003e35.png)
 
 
 ## 予定
 
-アイテム修正、アイテム削除、注文関連機能
+アイテム修正、アイテム削除、注文関連機能など
