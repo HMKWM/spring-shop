@@ -42,7 +42,7 @@
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const token = document.querySelector('meta[name="_csrf"]').content;
 
-        fetch("/carts",{
+        fetch("/carts/[[${item.itemId}]]",{
             method:"Post",
             headers: {
                 "header": header,
@@ -51,7 +51,6 @@
             },
             body:JSON.stringify({
                 memberId:[[${member.memberId}]],
-                itemId:[[${item.itemId}]],
                 count:document.querySelector("#count").value
             })
         }).then(response=>{

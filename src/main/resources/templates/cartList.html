@@ -21,14 +21,14 @@
       <th scope="col">상품명</th>
       <th scope="col">가격</th>
       <th scope="col">갯수</th>
-      <th scope="col">주문 가격</th>
-      <th scope="col">주문 관리</th>
+      <th scope="col">상품 가격</th>
+      <th scope="col">장바구니 관리</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="cartItem : ${cartItemList}">
-      <td><input type="checkbox" class="checkItem" th:data-id="${cartItem.cartItemId}" /></td>
-      <td><img width="150" height="150" th:src="@{'/images/'+${cartItem.imgName}}" /></td>
+    <tr th:each="cartItem : ${cartItemView}">
+      <td><input type="checkbox" class="checkItem" th:data-id="${cartItem.cartItemId}" th:data-item_id="${cartItem.itemId}" th:data-count="${cartItem.count}"/></td>
+      <td><img width="150" height="150" th:data-id="${cartItem.itemId}" th:src="@{'/images/'+${cartItem.imgName}}" /></td>
       <td th:text="${cartItem.itemName}"></td>
       <td th:text="${cartItem.price + '원'}"></td>
       <td th:text="${cartItem.count}"><button th:data-id="${cartItem.cartItemId}" onclick="deleteCartItem()">삭제</button></td>
@@ -37,58 +37,101 @@
     </tr>
     <tr>
       <td colspan="6">총 금액</td>
-      <td th:text="${cartItemList.isEmpty() ? '0원' : #aggregates.sum(cartItemList.![price*count]) + '원'}"></td>
+      <td th:text="${cartItemView.isEmpty() ? '0원' : #aggregates.sum(cartItemView.![price*count]) + '원'}"></td>
     </tr>
     </tbody>
   </table>
 </div>
 <button onclick="deleteSelectedCartItems()">체크 삭제</button>
 <button onclick="deleteAllCartItems()">전체 삭제</button>
+<button onclick="addAllOrder()">주문 하기</button>
 
 
 </body>
 </html>
 
 <script th:inline="javascript">
+
+  const header = document.querySelector('meta[name="_csrf_header"]').content;
+  const token = document.querySelector('meta[name="_csrf"]').content;
+
   function deleteCartItem(button){
     const cartItemId = button.getAttribute('data-id');
-    sendDelete([cartItemId]);
+    sendDeleteCartItem([cartItemId]);
   }
 
   function deleteSelectedCartItems(){
     const checkItems = document.querySelectorAll('.checkItem:checked');
     const cartItemIdList = Array.from(checkItems, item => item.getAttribute('data-id'));
-    sendDelete(cartItemIdList);
+    sendDeleteCartItem(cartItemIdList).then(response=>{
+      if(response.status==200){
+        alert("선택 삭제가 성공했습니다.");
+        location.reload();
+      } else {
+        alert("산택 삭제가 실패했습니다.")
+      }
+    });
   }
 
   function deleteAllCartItems(){
     const allItems = document.querySelectorAll('.checkItem');
     const cartItemIdList = Array.from(allItems, item => item.getAttribute('data-id'));
-    sendDelete(cartItemIdList);
+    sendDeleteCartItem(cartItemIdList)
+            .then(response=>{
+      if(response.status==200){
+        alert("전체 삭제에 성공했습니다.");
+        location.reload();
+      } else {
+        alert("전체 삭제가 실패했습니다.")
+      }
+    });
   }
 
-  function sendDelete(arr){
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
-
-    fetch(`/carts/delete`,{
-      method:"PUT",
+  function sendDeleteCartItem(arr){
+    return fetch(`/carts/delete`,{
+      method:"POST",
       headers: {
         "header": header,
         "Content-Type": "application/json",
         "X-CSRF-Token": token
       },
       body:JSON.stringify(arr)
-    }).then(response=>{
-      if(response.status==200){
-        alert("성공했습니다.");
-        location.reload();
-      } else {
-        alert("실패했습니다.")
-      }
     })
   }
 
+  function addAllOrder(){
+    const allItems = [];
+    const allBoxes = document.querySelectorAll(".checkItem");
+    const cartItemIdList = Array.from(allBoxes, item => item.getAttribute('data-id'));
 
+    allBoxes.forEach((box) => {
+      const item = {
+        itemId: box.dataset.item_id,
+        count: box.dataset.count
+      };
+      allItems.push(item);
+    });
+
+
+    fetch(`/orders`,{
+      method:"POST",
+      headers: {
+        "header": header,
+        "Content-Type": "application/json",
+        "X-CSRF-Token": token
+      },
+      body:JSON.stringify(allItems)
+    }).then(response=>{
+      if(response.status==200){
+        alert("주문을 성공했습니다.");
+        sendDeleteCartItem(cartItemIdList)
+                .then(response=>{
+                  location.reload();
+                })
+      } else {
+        alert("주문을 실패했습니다.")
+      }
+    })
+  }
 
 </script>

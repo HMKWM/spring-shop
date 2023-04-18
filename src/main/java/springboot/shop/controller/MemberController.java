@@ -50,14 +50,6 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @GetMapping("/login")
-    public String loginPage(){
-        return "loginForm";
-    }
-
-//    @PostMapping("/login")
-
-
     @GetMapping("/members")
     public String manageMember(@ModelAttribute SearchCond cond, Model model){
         List<Member> memberList = memberService.findAll(cond);

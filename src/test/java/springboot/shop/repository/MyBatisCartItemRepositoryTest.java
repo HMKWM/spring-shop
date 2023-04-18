@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import springboot.shop.domain.CartItem;
-import springboot.shop.domain.CartItemList;
+import springboot.shop.domain.CartItemView;
 import springboot.shop.domain.Item;
 
 import java.util.ArrayList;
@@ -50,8 +50,8 @@ class MyBatisCartItemRepositoryTest {
         cartItemRepository.delete(deleteList);
 
         //read
-        CartItemList findCartItemList = cartItemRepository.findById(cartItem.getCartItemId());
-        Assertions.assertThat(findCartItemList).isNull();
+        CartItemView findCartItemView = cartItemRepository.findById(cartItem.getCartItemId());
+        Assertions.assertThat(findCartItemView).isNull();
 
     }
 }

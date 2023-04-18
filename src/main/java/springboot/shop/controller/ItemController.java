@@ -65,13 +65,10 @@ public class ItemController {
     
     @DeleteMapping("/{itemId}")
     public ResponseEntity deleteItem(@PathVariable Long itemId){
-        /**
-         * 삭제 코드 작성하기
-         */
-        //인가 관련 코드도 필요함.
-        itemService.delete(itemId);
-        
-        return new ResponseEntity(HttpStatus.OK);
+//        itemService.delete(itemId);
+//
+//        return new ResponseEntity(HttpStatus.OK);
+        return null;
     }
 
 }

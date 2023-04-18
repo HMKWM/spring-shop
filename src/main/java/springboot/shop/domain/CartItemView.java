@@ -5,8 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CartItemList {
+public class CartItemView {
     private Long cartItemId;
+    private Long itemId;
     private String itemName;
     private int price;
     private int count;

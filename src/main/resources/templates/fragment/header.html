@@ -8,7 +8,7 @@
                 <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
                 <th:block th:if="${member != null}">
                 <li><a href="/carts" class="nav-link px-2 text-white">장바구니</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">주문목록</a></li>
+                <li><a href="/orders" class="nav-link px-2 text-white">주문목록</a></li>
                 <th:block th:if="${member.role.toString() == 'ADMIN'}">
                 <li><a href="/items/add" class="nav-link px-2 text-white">상품추가</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">상품관리</a></li>

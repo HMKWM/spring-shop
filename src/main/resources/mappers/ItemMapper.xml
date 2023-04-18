@@ -8,26 +8,36 @@
         values (#{name}, #{price}, #{quantity}, #{content}, now(), now())
     </insert>
     <resultMap id="itemResult" type="Item">
-        <result property="itemId" column="item_id" />
+        <id property="itemId" column="item_id" />
         <result property="name" column="name" />
         <result property="price" column="price" />
         <result property="quantity" column="quantity" />
         <result property="createDate" column="create_date" />
         <result property="updateDate" column="update_date" />
-        <collection property="itemImageList" column="item_id" javaType="java.util.ArrayList"
-                    ofType="ItemImage" select="findImageListById" />
+        <collection property="itemImageList" javaType="java.util.ArrayList" ofType="ItemImage">
+            <id property="itemImgId" column="item_img_id"/>
+            <result property="itemId" column="item_id" />
+            <result property="imgName" column="img_name" />
+            <result property="originImgName" column="origin_img_name" />
+            <result property="paths" column="paths" />
+            <result property="orders" column="orders" />
+            <result property="createDate" column="img_create_date" />
+            <result property="updateDate" column="img_update_date" />
+        </collection>
     </resultMap>
     <select id="findById" resultMap="itemResult">
-        select item_id, name, price, quantity, content, create_date, update_date from item where item_id = #{id}
-    </select>
-    <select id="findImageListById" resultType="ItemImage">
-        select item_img_id, item_id, img_name, origin_img_name, paths, orders, create_date, update_date
-        from item_img where item_id = #{id}
+        select i.item_id, i.name, i.price, i.quantity, i.content, i.create_date, i.update_date,
+               ii.item_img_id, ii.img_name, ii.origin_img_name, ii.paths, ii.orders, ii.create_date as img_create_date, ii.update_date as img_update_date
+        from item i
+        inner join item_img ii on i.item_id = ii.item_id
+        where i.item_id = #{id}
     </select>
 
     <select id="findAll" resultMap="itemResult">
-        select item_id, name, price, quantity, content, create_date, update_date
-        from item
+        select i.item_id, i.name, i.price, i.quantity, i.content, i.create_date, i.update_date,
+        ii.item_img_id, ii.img_name, ii.origin_img_name, ii.paths, ii.orders, ii.create_date as img_create_date, ii.update_date as img_update_date
+        from item i
+        inner join item_img ii on i.item_id = ii.item_id
         <where>
             <if test="cond.keyword != null">
                 and name like concat('%', #{cond.keyword}, '%')

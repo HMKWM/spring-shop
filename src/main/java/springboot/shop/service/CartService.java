@@ -3,7 +3,8 @@ package springboot.shop.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import springboot.shop.domain.CartItem;
-import springboot.shop.domain.CartItemList;
+import springboot.shop.domain.CartItemView;
+import springboot.shop.exception.CartItemNotFoundException;
 import springboot.shop.repository.CartItemRepository;
 
 import java.util.List;
@@ -22,11 +23,16 @@ public class CartService {
         return cartItemRepository.findByMemberId(memberId);
     }
 
-    public List<CartItemList> getCartItemList(Long memberId){
+    public List<CartItemView> getCartItemList(Long memberId){
         return cartItemRepository.findAll(memberId);
     }
 
-    public void removeCartItem(List<Long> cartItemIdList){
+    public void removeCartItem(List<Long> cartItemIdList, Long memberId){
+        List<Long> findCartItemIdList = cartItemRepository.findByMemberId(memberId);
+        if(!findCartItemIdList.containsAll(cartItemIdList) || cartItemIdList.isEmpty()){
+            throw new CartItemNotFoundException("Cannot find corresponding cart item(s).");
+        }
+
         cartItemRepository.delete(cartItemIdList);
     }
 }
