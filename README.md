@@ -8,18 +8,20 @@ spring boot, mybatis, mysql, gradle, spring security
 
 ## api
 
-|function|method|uri|
-|---|---|---|
-|main page|GET|/|
-|Login page|GET|/login|
-|signup page|GET|/signup|
-|signup|GET|/signup|
-|item information|GET|/items/{itemId}|
-|item add page|GET|/items/add|
-|item add|POST|/items/add|
-|cart page|GET|/carts|
-|cart item add|POST|/carts/{itemId}|
-|cart item delete|PUT|/carts/delete|
+|function| method |uri|
+|---|--------|---|
+|main page| GET    |/|
+|Login page| GET    |/login|
+|signup page| GET    |/signup|
+|signup| GET    |/signup|
+|item information| GET    |/items/{itemId}|
+|item add page| GET    |/items/add|
+|item add| POST   |/items/add|
+|cart page| GET    |/carts|
+|cart item add| POST   |/carts/{itemId}|
+|cart item delete| POST   |/carts/delete|
+|order page| GET | /orders|
+|order add| POST | /orders|
 
 ## ERD
 

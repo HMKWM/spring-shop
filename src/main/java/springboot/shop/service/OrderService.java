@@ -20,7 +20,7 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
 
     @Transactional
-    public void saveOrder(Long memberId, List<OrderItem> orderItemList){
+    public void addOrder(Long memberId, List<OrderItem> orderItemList){
         Order order = new Order();
         order.setMemberId(memberId);
         order.setStatus(OrderStatus.ORDER);
@@ -32,4 +32,15 @@ public class OrderService {
         return orderRepository.findByMemberId(memberId);
     }
 
+    public List<Order> getAllOrderList(){
+        return orderRepository.findAll();
+    }
+
+    public void changeOrderStatus(Long orderId, OrderStatus status){
+        orderRepository.updateStatus(orderId, status);
+    }
+
+    public Long getOrderOwner(Long orderId){
+        return orderRepository.findMemberIdByOrderId(orderId);
+    }
 }

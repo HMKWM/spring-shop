@@ -13,6 +13,8 @@ import springboot.shop.domain.SearchCond;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
+
 @SpringBootTest
 class MyBatisItemRepositoryTest {
 
@@ -21,7 +23,7 @@ class MyBatisItemRepositoryTest {
     @Autowired
     ItemImageRepository itemImageRepository;
 
-    Item item;
+    Item item = null;
 
     @BeforeEach
     void before(){
@@ -45,37 +47,35 @@ class MyBatisItemRepositoryTest {
     @Test
     @Transactional
     void findById(){
-        Assertions.assertThat(item.getItemId()).isNotNull();
+        assertThat(item.getItemId()).isNotNull();
 
         Item findItem = itemRepository.findById(item.getItemId());
-        Assertions.assertThat(findItem).isEqualTo(item);
-        Assertions.assertThat(findItem.getItemImageList().size()).isEqualTo(1);
+        assertThat(findItem).isEqualTo(item);
+        assertThat(findItem.getItemImageList().size()).isEqualTo(1);
 
     }
 
     @Test
     @Transactional
     void update() throws InterruptedException {
-        itemRepository.save(item);
         String updateName = "updateName";
         item.setName(updateName);
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         itemRepository.update(item);
         Item findItem = itemRepository.findById(item.getItemId());
-        Assertions.assertThat(findItem.getName()).isEqualTo(updateName);
-        Assertions.assertThat(findItem.getCreateDate()).isNotEqualTo(findItem.getUpdateDate());
+        assertThat(findItem.getName()).isEqualTo(updateName);
+        assertThat(findItem.getCreateDate()).isNotEqualTo(findItem.getUpdateDate());
     }
 
     @Test
     @Transactional
     void delete(){
-        itemRepository.save(item);
         Item findItem = itemRepository.findById(item.getItemId());
-        Assertions.assertThat(findItem).isNotNull();
+        assertThat(findItem).isNotNull();
         itemRepository.delete(item.getItemId());
         Item deleteItem = itemRepository.findById(item.getItemId());
-        Assertions.assertThat(deleteItem).isNull();
+        assertThat(deleteItem).isNull();
     }
 
     @Test
@@ -89,6 +89,6 @@ class MyBatisItemRepositoryTest {
         List<Item> findList = itemRepository.findAll(ph);
 
         ItemImage itemImage = findList.get(findList.size()-1).getItemImageList().get(0);
-        Assertions.assertThat(itemImage).isNotNull();
+        assertThat(itemImage).isNotNull();
     }
 }

@@ -8,14 +8,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import springboot.shop.domain.Member;
-import springboot.shop.domain.MemberAdaptor;
-import springboot.shop.domain.Order;
-import springboot.shop.domain.OrderItem;
+import springboot.shop.domain.*;
 import springboot.shop.service.CartService;
 import springboot.shop.service.OrderService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +39,6 @@ public class OrderController {
      */
 
     private final OrderService orderService;
-    private final CartService cartService;
 
     @ModelAttribute
     public Member member(@AuthenticationPrincipal MemberAdaptor memberAdaptor){
@@ -62,17 +57,27 @@ public class OrderController {
         return "orderList";
     }
 
+    @GetMapping("/manage")
+    public String orderManagePage(@AuthenticationPrincipal MemberAdaptor memberAdaptor, Model model){
+        Member member = memberAdaptor.getMember();
+
+        if(member.getRole()!= Role.ADMIN){
+            return "redirect:/";
+        }
+
+        List<Order> orderList = orderList = orderService.getAllOrderList();
+        model.addAttribute("orderList", orderList);
+        return "orderManage";
+    }
+
     @PostMapping
     @ResponseBody
     public ResponseEntity order(@AuthenticationPrincipal MemberAdaptor memberAdaptor,
                                 @RequestBody List<OrderItem> orderItemList){
         Member member = memberAdaptor.getMember();
 
-        cartService.removeCartItem(new ArrayList<>(), member.getMemberId());
-
-
         try {
-            orderService.saveOrder(member.getMemberId(), orderItemList);
+            orderService.addOrder(member.getMemberId(), orderItemList);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             log.error("add order error", e);
@@ -80,11 +85,39 @@ public class OrderController {
         }
     }
 
-    @PatchMapping
-    public String cancelOrder(@AuthenticationPrincipal MemberAdaptor memberAdaptor){
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity cancelOrder(@AuthenticationPrincipal MemberAdaptor memberAdaptor,
+                              @PathVariable Long orderId){
+
         Member member = memberAdaptor.getMember();
 
+        Long memberId = member.getMemberId();
+        Long findMemberId = orderService.getOrderOwner(orderId);
 
-        return null;
+        if(memberId != findMemberId){
+            log.info("fail={}",memberId);
+            log.info("fail={}",findMemberId);
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        orderService.changeOrderStatus(orderId, OrderStatus.CANCEL);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{orderId}/reject")
+    public ResponseEntity rejectOrder(@AuthenticationPrincipal MemberAdaptor memberAdaptor,
+                              @PathVariable Long orderId){
+
+        Member member = memberAdaptor.getMember();
+        Role role = member.getRole();
+
+        if(!role.equals(Role.ADMIN)){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        orderService.changeOrderStatus(orderId, OrderStatus.REJECTED);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

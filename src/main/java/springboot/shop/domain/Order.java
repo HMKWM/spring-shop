@@ -14,5 +14,6 @@ public class Order {
     private LocalDateTime orderDate;
     private OrderStatus status;
 
+    private Member member;
     private List<OrderItem> orderItemList;
 }

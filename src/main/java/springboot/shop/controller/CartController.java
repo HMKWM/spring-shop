@@ -12,6 +12,7 @@ import springboot.shop.domain.CartItemView;
 import springboot.shop.domain.Member;
 import springboot.shop.domain.MemberAdaptor;
 import springboot.shop.exception.CartItemNotFoundException;
+import springboot.shop.repository.ItemRepository;
 import springboot.shop.service.CartService;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public class CartController {
         cartItem.setMemberId(member.getMemberId());
         cartItem.setItemId(itemId);
 
-        cartService.saveCartItem(cartItem);
+        cartService.addCartItem(cartItem);
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -68,8 +69,6 @@ public class CartController {
 
         Member member = memberAdaptor.getMember();
         Long memberId = member.getMemberId();
-
-
 
         try{
             cartService.removeCartItem(cartItemIdList, memberId);

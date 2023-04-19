@@ -6,6 +6,7 @@ import springboot.shop.domain.CartItem;
 import springboot.shop.domain.CartItemView;
 import springboot.shop.exception.CartItemNotFoundException;
 import springboot.shop.repository.CartItemRepository;
+import springboot.shop.repository.ItemRepository;
 
 import java.util.List;
 
@@ -14,8 +15,7 @@ import java.util.List;
 public class CartService {
 
     private final CartItemRepository cartItemRepository;
-
-    public void saveCartItem(CartItem cartItem){
+    public void addCartItem(CartItem cartItem){
         cartItemRepository.save(cartItem);
     }
 

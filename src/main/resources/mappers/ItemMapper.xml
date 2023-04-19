@@ -12,6 +12,7 @@
         <result property="name" column="name" />
         <result property="price" column="price" />
         <result property="quantity" column="quantity" />
+        <result property="content" column="content" />
         <result property="createDate" column="create_date" />
         <result property="updateDate" column="update_date" />
         <collection property="itemImageList" javaType="java.util.ArrayList" ofType="ItemImage">
