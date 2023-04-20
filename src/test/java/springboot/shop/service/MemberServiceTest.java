@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import springboot.shop.domain.Member;
 import springboot.shop.domain.Role;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Slf4j
 class MemberServiceTest {

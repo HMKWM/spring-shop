@@ -47,7 +47,7 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    public List<Item> getItemList(PageHandler ph){
+    public List<Item> getItemList(PageHandlerVO ph){
         return itemRepository.findAll(ph);
     }
 

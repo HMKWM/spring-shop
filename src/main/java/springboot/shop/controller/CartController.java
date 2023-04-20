@@ -12,7 +12,6 @@ import springboot.shop.domain.CartItemView;
 import springboot.shop.domain.Member;
 import springboot.shop.domain.MemberAdaptor;
 import springboot.shop.exception.CartItemNotFoundException;
-import springboot.shop.repository.ItemRepository;
 import springboot.shop.service.CartService;
 
 import java.util.List;

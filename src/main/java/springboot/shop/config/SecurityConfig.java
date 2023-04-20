@@ -2,6 +2,7 @@ package springboot.shop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -12,6 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity(debug = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig{
 
     @Bean
@@ -19,10 +21,9 @@ public class SecurityConfig{
         //authentication
         http.authorizeHttpRequests()
                 .antMatchers("/", "/signup", "/login","/images/**").permitAll()
-                .antMatchers("/manage").hasRole("ADMIN")
+                .antMatchers("/manage", "/orders/**/reject", "/items/add").hasRole("ADMIN")
                 .antMatchers("/carts/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/items/add").hasRole("ADMIN")
-                .antMatchers("/items/delete").hasRole("ADMIN")
+                .antMatchers().hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         //login

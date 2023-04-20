@@ -30,8 +30,9 @@
                             <div>
                                 <h4>구매 가격: <span id="totalPrice">0원</span></h4>
                                 <input type="hidden" id="price" th:value="${item.price}" />
+                                <input type="hidden" id="item-id" th:value="${item.itemId}" />
                             </div>
-                            <button type="button" class="btn btn-primary mb-3" >구매하기</button>
+                            <button type="button" class="btn btn-primary mb-3" onclick="addOrder()">구매하기</button>
                             <button type="button" class="btn btn-primary mb-3" onclick="addCart()">장바구니</button>
                         </form>
                     </div>
@@ -40,21 +41,25 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <span>Info</span>
-                <hr class="my-4">
+                <span>상품 설명</span>
+                <hr class="my-3">
                 <p th:text="${item.content}"></p>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8 left-buttons d-flex justify-content-end">
                 <button style="margin-right: 5px" class="btn btn-primary">글 수정</button>
-                <button class="btn btn-danger">글 삭제</button>
+                <button class="btn btn-danger" onclick="deleteConfirm()">글 삭제</button>
             </div>
         </div>
     </div>
 </body>
 </html>
 <script th:inline="javascript">
+
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+    const token = document.querySelector('meta[name="_csrf"]').content;
+
     function addCart(){
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const token = document.querySelector('meta[name="_csrf"]').content;
@@ -92,15 +97,17 @@
     }
 
     function addOrder(){
+        let boxes = [];
 
-        allBoxes.forEach((box) => {
-            const item = {
-                itemId: box.dataset.item_id,
-                count: box.dataset.count
-            };
-            allItems.push(item);
-        });
+        let itemId = document.querySelector("#item-id").value;
+        let count = document.querySelector("#count").value;
 
+        const item = {
+            "itemId": itemId,
+            "count": count
+        };
+
+        boxes.push(item);
 
         fetch(`/orders`,{
             method:"POST",
@@ -109,21 +116,42 @@
                 "Content-Type": "application/json",
                 "X-CSRF-Token": token
             },
-            body:JSON.stringify(allItems)
+            body:JSON.stringify(boxes)
         }).then(response=>{
             if(response.status==200){
                 alert("주문을 성공했습니다.");
-                sendDeleteCartItem(cartItemIdList)
-                    .then(response=>{
-                        location.reload();
-                    })
+                location.href="/orders";
             } else {
                 alert("주문을 실패했습니다.")
             }
         })
     }
 
-    function deleteItem(){
+    function deleteConfirm(){
+        let confirmFlag = confirm("상품을 삭제하시겠습니까?");
+        if (confirmFlag) {
+            deleteItem();
+        } else {
+        }
+    }
 
+    function deleteItem(){
+        let itemId = document.querySelector("#item-id").value;
+
+        fetch(`/items/${itemId}`,{
+            method:"DELETE",
+            headers: {
+                "header": header,
+                "Content-Type": "application/json",
+                "X-CSRF-Token": token
+            }
+        }).then(response=>{
+            if(response.status==200){
+                alert("상품 삭제에 성공했습니다.");
+                location.href="/";
+            } else {
+                alert("실패했습니다.")
+            }
+        })
     }
 </script>

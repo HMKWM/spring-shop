@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import springboot.shop.domain.Order;
 import springboot.shop.domain.OrderItem;
 import springboot.shop.domain.OrderStatus;
-import springboot.shop.repository.CartItemRepository;
 import springboot.shop.repository.OrderItemRepository;
 import springboot.shop.repository.OrderRepository;
 
@@ -25,6 +24,7 @@ public class OrderService {
         order.setMemberId(memberId);
         order.setStatus(OrderStatus.ORDER);
         orderRepository.save(order);
+
         orderItemRepository.save(order.getOrderId(), orderItemList);
     }
 
@@ -42,5 +42,9 @@ public class OrderService {
 
     public Long getOrderOwner(Long orderId){
         return orderRepository.findMemberIdByOrderId(orderId);
+    }
+
+    public void deleteOrder(Long orderId){
+        orderRepository.delete(orderId);
     }
 }

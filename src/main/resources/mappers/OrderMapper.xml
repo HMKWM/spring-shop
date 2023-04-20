@@ -9,13 +9,11 @@
 
     <select id="findByMemberId" resultMap="orderResult">
         select o.orders_id, o.member_id, o.order_date, o.status,
-               oi.order_item_id, oi.item_id, oi.count,
-               i.name, i.price,
+               oi.order_item_id, oi.item_id, oi.item_img_id, oi.order_item_name, oi.count, oi.order_price,
                ii.item_img_id, ii.img_name, ii.origin_img_name, ii.paths, ii.orders
         from orders o
-        inner join order_item oi on o.orders_id = oi.orders_id
-        inner join item i on oi.item_id = i.item_id
-        inner join item_img ii on i.item_id = ii.item_id
+                 inner join order_item oi on o.orders_id = oi.orders_id
+                 left join item_img ii on oi.item_img_id = ii.item_img_id AND COALESCE(ii.orders, 0) = 0
         where o.member_id = ${memberId}
         order by orders_id desc;
     </select>
@@ -28,35 +26,30 @@
             <id property="orderItemId" column="order_item_id" />
             <result property="orderId" column="orders_id"/>
             <result property="itemId" column="item_id"/>
+            <result property="itemImgId" column="item_img_id"/>
+            <result property="orderItemName" column="order_item_name"/>
+            <result property="orderPrice" column="order_price"/>
             <result property="count" column="count"/>
-            <association property="item" javaType="Item">
-                <id property="itemId" column="item_id"/>
-                <result property="name" column="name" />
-                <result property="price" column="price" />
-                <result property="quantity" column="quantity" />
-                <collection property="itemImageList" javaType="java.util.ArrayList" ofType="ItemImage">
-                    <id property="itemImgId" column="item_img_id"/>
-                    <result property="itemId" column="item_id" />
-                    <result property="imgName" column="img_name" />
-                    <result property="originImgName" column="origin_img_name" />
-                    <result property="paths" column="paths" />
-                    <result property="orders" column="orders" />
-                </collection>
+            <association property="itemImage" javaType="itemImage">
+                <id property="itemImgId" column="item_img_id"/>
+                <result property="itemId" column="item_id" />
+                <result property="imgName" column="img_name" />
+                <result property="originImgName" column="origin_img_name" />
+                <result property="paths" column="paths" />
+                <result property="orders" column="orders" />
             </association>
         </collection>
     </resultMap>
 
     <select id="findAll" resultMap="orderAllResult">
         select o.orders_id, o.member_id, o.order_date, o.status,
-               oi.order_item_id, oi.item_id, oi.count,
-               i.name, i.price,
+               oi.order_item_id, oi.item_id, oi.item_img_id, oi.order_item_name, oi.count, oi.order_price,
                ii.item_img_id, ii.img_name, ii.origin_img_name, ii.paths, ii.orders,
                m.name as member_name
         from orders o
                  inner join member m on m.member_id = o.member_id
                  inner join order_item oi on o.orders_id = oi.orders_id
-                 inner join item i on oi.item_id = i.item_id
-                 inner join item_img ii on i.item_id = ii.item_id
+                 inner join item_img ii on oi.item_img_id = ii.item_img_id AND COALESCE(ii.orders, 0) = 0
         order by orders_id desc;
     </select>
     <resultMap id="orderAllResult" type="Order">
@@ -68,25 +61,21 @@
             <id property="memberId" column="member_id"/>
             <result property="name" column="member_name" />
         </association>
-        
         <collection property="orderItemList" javaType="java.util.ArrayList" ofType="OrderItem">
             <id property="orderItemId" column="order_item_id" />
             <result property="orderId" column="orders_id"/>
             <result property="itemId" column="item_id"/>
+            <result property="itemImgId" column="item_img_id"/>
+            <result property="orderItemName" column="order_item_name"/>
+            <result property="orderPrice" column="order_price"/>
             <result property="count" column="count"/>
-            <association property="item" javaType="Item">
-                <id property="itemId" column="item_id"/>
-                <result property="name" column="name" />
-                <result property="price" column="price" />
-                <result property="quantity" column="quantity" />
-                <collection property="itemImageList" javaType="java.util.ArrayList" ofType="ItemImage">
-                    <id property="itemImgId" column="item_img_id"/>
-                    <result property="itemId" column="item_id" />
-                    <result property="imgName" column="img_name" />
-                    <result property="originImgName" column="origin_img_name" />
-                    <result property="paths" column="paths" />
-                    <result property="orders" column="orders" />
-                </collection>
+            <association property="itemImage" javaType="itemImage">
+                <id property="itemImgId" column="item_img_id"/>
+                <result property="itemId" column="item_id" />
+                <result property="imgName" column="img_name" />
+                <result property="originImgName" column="origin_img_name" />
+                <result property="paths" column="paths" />
+                <result property="orders" column="orders" />
             </association>
         </collection>
     </resultMap>

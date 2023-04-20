@@ -2,7 +2,6 @@ package springboot.shop.repository.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import springboot.shop.domain.Order;
-import springboot.shop.domain.OrderStatus;
 
 import java.util.List;
 import java.util.Map;

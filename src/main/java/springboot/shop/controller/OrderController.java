@@ -2,6 +2,7 @@ package springboot.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springboot.shop.domain.*;
-import springboot.shop.service.CartService;
 import springboot.shop.service.OrderService;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public class OrderController {
             return "redirect:/";
         }
 
-        List<Order> orderList = orderList = orderService.getAllOrderList();
+        List<Order> orderList = orderService.getAllOrderList();
         model.addAttribute("orderList", orderList);
         return "orderManage";
     }
@@ -92,11 +92,9 @@ public class OrderController {
         Member member = memberAdaptor.getMember();
 
         Long memberId = member.getMemberId();
-        Long findMemberId = orderService.getOrderOwner(orderId);
+        Long orderOwner = orderService.getOrderOwner(orderId);
 
-        if(memberId != findMemberId){
-            log.info("fail={}",memberId);
-            log.info("fail={}",findMemberId);
+        if(memberId != orderOwner){
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
@@ -119,5 +117,28 @@ public class OrderController {
         orderService.changeOrderStatus(orderId, OrderStatus.REJECTED);
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity deleteOrder(@AuthenticationPrincipal MemberAdaptor memberAdaptor,
+                                      @PathVariable Long orderId){
+        Member member = memberAdaptor.getMember();
+        Role role = member.getRole();
+
+        if (role == Role.ADMIN) {
+            orderService.deleteOrder(orderId);
+            return ResponseEntity.ok("Order successfully deleted by ADMIN");
+        } else {
+            Long orderOwner = orderService.getOrderOwner(orderId);
+            Long memberId = member.getMemberId();
+
+            if (orderOwner != memberId) {
+                return ResponseEntity.badRequest()
+                        .body("Cannot delete order: Not the order owner");
+            } else {
+                orderService.deleteOrder(orderId);
+                return ResponseEntity.ok("Order successfully deleted");
+            }
+        }
     }
 }

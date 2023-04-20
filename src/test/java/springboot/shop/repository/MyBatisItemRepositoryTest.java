@@ -1,6 +1,5 @@
 package springboot.shop.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import springboot.shop.domain.Item;
 import springboot.shop.domain.ItemImage;
-import springboot.shop.domain.PageHandler;
+import springboot.shop.domain.PageHandlerVO;
 import springboot.shop.domain.SearchCond;
 
 import java.util.List;
@@ -85,7 +84,7 @@ class MyBatisItemRepositoryTest {
         SearchCond cond = new SearchCond();
         cond.setPage(count%9 == 0 ? count/9 : count/9+1);
         cond.setPageSize(9);
-        PageHandler ph = new PageHandler(count, 10, cond);
+        PageHandlerVO ph = new PageHandlerVO(count, 10, cond);
         List<Item> findList = itemRepository.findAll(ph);
 
         ItemImage itemImage = findList.get(findList.size()-1).getItemImageList().get(0);

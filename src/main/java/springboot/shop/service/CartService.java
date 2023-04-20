@@ -6,7 +6,6 @@ import springboot.shop.domain.CartItem;
 import springboot.shop.domain.CartItemView;
 import springboot.shop.exception.CartItemNotFoundException;
 import springboot.shop.repository.CartItemRepository;
-import springboot.shop.repository.ItemRepository;
 
 import java.util.List;
 

@@ -2,8 +2,7 @@ package springboot.shop.repository.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import springboot.shop.domain.Item;
-import springboot.shop.domain.Member;
-import springboot.shop.domain.PageHandler;
+import springboot.shop.domain.PageHandlerVO;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ public interface ItemMapper {
 
     Item findById(Long id);
 
-    List<Item> findAll(PageHandler ph);
+    List<Item> findAll(PageHandlerVO ph);
 
     void update(Item item);
 

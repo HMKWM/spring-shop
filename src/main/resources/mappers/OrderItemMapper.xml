@@ -2,11 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="springboot.shop.repository.mapper.OrderItemMapper">
+<!--    <insert id="save">-->
+<!--        insert into order_item(orders_id, item_id, order_price, count)-->
+<!--        values-->
+<!--        <foreach collection="orderItemList" item="orderItem" separator=" , ">-->
+<!--            (#{orderId}, #{orderItem.itemId}, #{orderPrice}, #{orderItem.count})-->
+<!--        </foreach>-->
+<!--    </insert>-->
     <insert id="save">
-        insert into order_item(orders_id, item_id, count)
-        values
-        <foreach collection="orderItemList" item="orderItem" separator=" , ">
-            (#{orderId}, #{orderItem.itemId}, #{orderItem.count})
+        INSERT INTO order_item(orders_id, item_id, item_img_id, order_item_name, order_price, count)
+        <foreach collection="orderItemList" item="orderItem" separator=" UNION ">
+            SELECT #{orderId}, i.item_id, ii.item_img_id, i.name, i.price, #{orderItem.count}
+            FROM item i inner join item_img ii on i.item_id = ii.item_id
+            WHERE i.item_id = #{orderItem.itemId} and ii.orders = 0;
         </foreach>
     </insert>
 </mapper>

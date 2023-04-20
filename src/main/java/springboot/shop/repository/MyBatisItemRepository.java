@@ -3,7 +3,7 @@ package springboot.shop.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import springboot.shop.domain.Item;
-import springboot.shop.domain.PageHandler;
+import springboot.shop.domain.PageHandlerVO;
 import springboot.shop.repository.mapper.ItemMapper;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class MyBatisItemRepository implements ItemRepository{
     }
 
     @Override
-    public List<Item> findAll(PageHandler ph) {
+    public List<Item> findAll(PageHandlerVO ph) {
         return itemMapper.findAll(ph);
     }
 
