@@ -8,47 +8,164 @@
   <link href="/css/header.css" rel="stylesheet">
   <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
   <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <style>
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      table-layout: fixed;
+    }
+
+    .table th,
+    .table td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+      vertical-align: middle; /* 셀의 내용을 중앙으로 정렬합니다. */
+      white-space: nowrap; /* 셀의 내용이 자동으로 개행되지 않도록 합니다. */
+      overflow: hidden; /* 셀의 내용이 셀의 크기를 넘어갈 때, 숨깁니다. */
+      text-overflow: ellipsis;
+    }
+
+    .table th {
+      background-color: #f5f5f5;
+    }
+
+    img {
+      display: block;
+      margin-right: 10px;
+      max-width: 100%;
+      height: auto;
+      float: left;
+
+    }
+
+    .table td div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .cancel{
+      text-decoration: underline;
+    }
+
+    .cancel:hover{
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 <th:block th:replace="~{fragment/header :: header(${member!=null ? member : null})}"></th:block>
 
 <div class="container">
   <table class="table" th:each="order : ${orderList}">
-    <span>주문 번호 : </span>
-    <span th:text="${order.orderId}"></span>
-    <span><br>주문 일자 : </span>
-    <span th:text="${order.orderDate}"></span>
-    <span><br>주문 상태 : </span>
-    <span th:text="${order.status}"></span>
     <thead>
-      <tr>
-        <th scope="col">사진</th>
-        <th scope="col">상품명</th>
-        <th scope="col">주문 수량</th>
-        <th scope="col">주문 금액</th>
-        <th scope="col">총 금액</th>
-      </tr>
+    <tr>
+      <th colspan="5">
+        <div style="display: flex; justify-content: space-between;">
+          <div>주문 번호 : <span th:text="${order.orderId}"></span></div>
+          <div>
+            <button class="btn btn-dark btn-sm" th:if="${order.status.toString()=='ORDER'}" th:data-order_id="${order.orderId}" onclick="cancelOrderConfirm(this)">주문 취소</button>
+            <a class="cancel" th:if="${order.status.toString()=='CANCEL'}" th:data-order_id="${order.orderId}" onclick="deleteOrderConfirm(this)">주문 삭제</a>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <div>주문 일자 : <span th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></span></div>
+          <div>주문 상태 :
+            <span th:if="${order.status.toString()=='ORDER'}" th:text="${'주문 성공'}"></span>
+            <span th:if="${order.status.toString()=='CANCEL'}" th:text="${'주문 취소'}"></span>
+            <span th:if="${order.status.toString()=='REJECTED'}" th:text="${'주문 거절'}"></span>
+          </div>
+        </div>
+      </th>
+    </tr>
+    <tr>
+      <th scope="col">사진</th>
+      <th scope="col">상품명</th>
+      <th scope="col">주문 수량</th>
+      <th scope="col">주문 금액</th>
+      <th scope="col">총 금액</th>
+    </tr>
     </thead>
     <tbody>
-      <tr th:each="orderItem : ${order.getOrderItemList()}">
-        <td><img width="150" height="150" th:src="@{'/images/'+${orderItem.item.itemImageList.get(0).imgName}}" /></td>
-        <td th:text="${orderItem.item.name}"></td>
-        <td th:text="${orderItem.count}"></td>
-        <td th:text="${orderItem.item.price}"></td>
-        <td th:text="${orderItem.count * orderItem.item.price}"></td>
-      </tr>
-      <tr>
-        <td colspan="4">총 금액</td>
-        <td th:text="${#aggregates.sum(order.getOrderItemList().![count * item.price]) + '원'}">
-      </tr>
+    <tr th:each="orderItem : ${order.getOrderItemList()}">
+      <td><img width="150" height="150" th:src="@{'/images/'+${orderItem.itemImage.imgName}}" /></td>
+      <td th:text="${orderItem.orderItemName}"></td>
+      <td th:text="${orderItem.count}"></td>
+      <td th:text="${orderItem.orderPrice+'원'}"></td>
+      <td th:text="${orderItem.count * orderItem.orderPrice+'원'}"></td>
+    </tr>
+    <tr>
+      <td colspan="4">총 금액</td>
+      <td th:text="${#aggregates.sum(order.getOrderItemList().![count * orderPrice]) + '원'}">
+    </tr>
     </tbody>
   </table>
 </div>
-
 
 </body>
 </html>
 
 <script th:inline="javascript">
 
+  const header = document.querySelector('meta[name="_csrf_header"]').content;
+  const token = document.querySelector('meta[name="_csrf"]').content;
+
+  function cancelOrderConfirm(button) {
+    let orderId = button.dataset.order_id;
+    let confirmFlag = confirm("주문취소를 하시겠습니까?");
+
+    if (confirmFlag) {
+      cancelOrder(orderId);
+    } else {
+    }
+  }
+
+  function cancelOrder(orderId){
+    fetch(`/orders/${orderId}/cancel`,{
+      method:'PATCH',
+      headers: {
+        "header": header,
+        "Content-Type": "application/json",
+        "X-CSRF-Token": token
+      }
+    }).then(response=>{
+      if(response.status==200){
+        alert("주문취소가 성공했습니다.")
+        location.reload();
+      } else {
+        alert("주문취소가 실패했습니다.")
+      }
+    });
+  }
+
+  function deleteOrderConfirm(button) {
+    let orderId = button.dataset.order_id;
+    let confirmFlag = confirm("해당 주문을 삭제하시겠습니까?");
+
+    if (confirmFlag) {
+      deleteOrder(orderId);
+    } else {
+    }
+  }
+
+  function deleteOrder(orderId){
+    fetch(`/orders/${orderId}`,{
+      method:'DELETE',
+      headers: {
+        "header": header,
+        "Content-Type": "application/json",
+        "X-CSRF-Token": token
+      }
+    }).then(response=>{
+      if(response.status==200){
+        alert("주문삭제가 성공했습니다.")
+        location.reload();
+      } else {
+        alert("주문삭제가 실패했습니다.")
+      }
+    });
+
+  }
 </script>

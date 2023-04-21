@@ -45,7 +45,7 @@ public class MemberService implements UserDetailsService{
         int count = memberRepository.count();
 
         cond.setPageSize(pageSize);
-        PageHandler ph = new PageHandler(count, naviSize, cond);
+        PageHandlerVO ph = new PageHandlerVO(count, naviSize, cond);
         return memberRepository.findAll(ph);
     }
 

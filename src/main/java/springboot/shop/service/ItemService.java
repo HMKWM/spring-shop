@@ -31,10 +31,10 @@ public class ItemService {
     }
 
     @Transactional
-    public void saveItem(Item item, List<MultipartFile> multipartFileList){
+    public void saveItem(Item item, List<MultipartFile> itemImgList){
         Item saveItem = itemRepository.save(item);
         try{
-            List<ItemImage> itemImages = fileService.saveImage(multipartFileList, saveItem.getItemId());
+            List<ItemImage> itemImages = fileService.saveImage(itemImgList, saveItem.getItemId());
             for(ItemImage itemImage : itemImages){
                 itemImageRepository.save(itemImage);
             }
@@ -47,12 +47,26 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    public List<Item> getItemList(PageHandler ph){
+    public List<Item> getItemList(PageHandlerVO ph){
         return itemRepository.findAll(ph);
     }
 
     public int count(String keyword){
         return itemRepository.count(keyword);
+    }
+
+    @Transactional
+    public void update(Item item, List<MultipartFile> itemImgList){
+        itemRepository.update(item);
+        try{
+            List<ItemImage> itemImages = fileService.saveImage(itemImgList, item.getItemId());
+            for(ItemImage itemImage : itemImages){
+                itemImageRepository.disconnectItemImage(item.getItemId(), 0);
+                itemImageRepository.save(itemImage);
+            }
+        } catch (Exception e){
+            log.error("error = {}",e);
+        }
     }
 
     public void delete(Long id){

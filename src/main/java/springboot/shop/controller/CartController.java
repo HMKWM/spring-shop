@@ -56,7 +56,7 @@ public class CartController {
         cartItem.setMemberId(member.getMemberId());
         cartItem.setItemId(itemId);
 
-        cartService.saveCartItem(cartItem);
+        cartService.addCartItem(cartItem);
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -68,8 +68,6 @@ public class CartController {
 
         Member member = memberAdaptor.getMember();
         Long memberId = member.getMemberId();
-
-
 
         try{
             cartService.removeCartItem(cartItemIdList, memberId);

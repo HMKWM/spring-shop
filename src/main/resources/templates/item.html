@@ -12,32 +12,56 @@
 <body>
     <th:block th:replace="~{fragment/header :: header(${member!=null ? member : null})}"></th:block>
 
-<div th:object="${item}">
-    <th:block th:each="image : ${item.itemImageList}">
-        <img th:src="@{'/images/'+${image.imgName}}" width="200" height="200"/>
-    </th:block>
-    <div>
-        <span id="name" th:text="*{name}"></span>
+    <div class="container">
+        <div class="row justify-content-center my-5">
+            <div class="col-8 col-md-4">
+                <img height="500" th:src="@{'/images/'+${item.itemImageList.get(0).imgName}}" class="img-fluid mb-3" />
+            </div>
+            <div class="col-8 col-md-4">
+                <div class="d-flex flex-column justify-content-between">
+                    <div>
+                        <h2 th:text="${item.name}"></h2>
+                        <h4 th:text="${item.price} + '원'"></h4>
+                        <form method="post">
+                            <div class="form-group mb-4">
+                                <label for="count">구매 수량</label>
+                                <input type="number" class="form-control" id="count" value="1" min="1" onchange="updateTotalPrice()"/>
+                            </div>
+                            <div>
+                                <h4>구매 가격: <span id="totalPrice">0원</span></h4>
+                                <input type="hidden" id="price" th:value="${item.price}" />
+                                <input type="hidden" id="item-id" th:value="${item.itemId}" />
+                            </div>
+                            <button type="button" class="btn btn-primary mb-3" onclick="addOrder()">구매하기</button>
+                            <button type="button" class="btn btn-primary mb-3" onclick="addCart()">장바구니</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <span>상품 설명</span>
+                <hr class="my-3">
+                <p th:text="${item.content}"></p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 left-buttons d-flex justify-content-end">
+                <a th:href="@{${item.itemId}+'/update'}">
+                <button style="margin-right: 5px" class="btn btn-primary" onclick="">글 수정</button>
+                </a>
+                <button class="btn btn-danger" onclick="deleteConfirm()">글 삭제</button>
+            </div>
+        </div>
     </div>
-    <div>
-        <span id="price" th:text="*{price+'원'}"></span>
-    </div>
-    <div>
-        <span id="quantity" th:text="*{'남은수량 ' + quantity+'개'}"></span>
-    </div>
-    <div>
-        <span id="content" th:text="*{'상품설명'+content}"></span>
-    </div>
-    <form method="post">
-        <span>구매 수량</span>
-        <input id="count" type="number" value="1" min="1" />
-        <button type="submit">구입</button>
-        <button id="cart" type="button" onclick="addCart()">장바구니</button>
-    </form>
-</div>
 </body>
 </html>
 <script th:inline="javascript">
+
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+    const token = document.querySelector('meta[name="_csrf"]').content;
+
     function addCart(){
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const token = document.querySelector('meta[name="_csrf"]').content;
@@ -62,4 +86,73 @@
         })
     }
 
+    function updateTotalPrice() {
+        let count = document.getElementById("count").value;
+        let price = document.getElementById("price").value;
+        let totalPrice = count * price;
+        document.getElementById("totalPrice").innerHTML = totalPrice + "원";
+    }
+
+    window.onload = function() {
+        updateTotalPrice();
+    }
+
+    function addOrder(){
+        let boxes = [];
+
+        let itemId = document.querySelector("#item-id").value;
+        let count = document.querySelector("#count").value;
+
+        const item = {
+            "itemId": itemId,
+            "count": count
+        };
+
+        boxes.push(item);
+
+        fetch(`/orders`,{
+            method:"POST",
+            headers: {
+                "header": header,
+                "Content-Type": "application/json",
+                "X-CSRF-Token": token
+            },
+            body:JSON.stringify(boxes)
+        }).then(response=>{
+            if(response.status==200){
+                alert("주문을 성공했습니다.");
+                location.href="/orders";
+            } else {
+                alert("주문을 실패했습니다.")
+            }
+        })
+    }
+
+    function deleteConfirm(){
+        let confirmFlag = confirm("상품을 삭제하시겠습니까?");
+        if (confirmFlag) {
+            deleteItem();
+        } else {
+        }
+    }
+
+    function deleteItem(){
+        let itemId = document.querySelector("#item-id").value;
+
+        fetch(`/items/${itemId}`,{
+            method:"DELETE",
+            headers: {
+                "header": header,
+                "Content-Type": "application/json",
+                "X-CSRF-Token": token
+            }
+        }).then(response=>{
+            if(response.status==200){
+                alert("상품 삭제에 성공했습니다.");
+                location.href="/";
+            } else {
+                alert("실패했습니다.")
+            }
+        })
+    }
 </script>

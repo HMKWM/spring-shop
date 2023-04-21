@@ -15,6 +15,13 @@
             update_date = now()
         where item_img_id = #{itemImgId};
     </update>
+
+    <update id="disconnectItemImage">
+        update item_img
+        set item_id = null
+        where item_id = #{itemId} and orders = #{order};
+    </update>
+
     <delete id="delete">
         delete from item_img where item_img_id = #{itemImgId};
     </delete>

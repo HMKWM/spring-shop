@@ -9,7 +9,11 @@ public class OrderItem {
     private Long orderItemId;
     private Long orderId;
     private Long itemId;
+    private Long itemImgId;
+    private String orderItemName;
     private Integer count;
+    private Integer orderPrice;
 
-    private Item item;
+    private ItemImage itemImage;
+//    private Item item;
 }

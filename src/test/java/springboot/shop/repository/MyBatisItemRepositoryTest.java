@@ -1,6 +1,5 @@
 package springboot.shop.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import springboot.shop.domain.Item;
 import springboot.shop.domain.ItemImage;
-import springboot.shop.domain.PageHandler;
+import springboot.shop.domain.PageHandlerVO;
 import springboot.shop.domain.SearchCond;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class MyBatisItemRepositoryTest {
@@ -21,7 +22,7 @@ class MyBatisItemRepositoryTest {
     @Autowired
     ItemImageRepository itemImageRepository;
 
-    Item item;
+    Item item = null;
 
     @BeforeEach
     void before(){
@@ -45,37 +46,35 @@ class MyBatisItemRepositoryTest {
     @Test
     @Transactional
     void findById(){
-        Assertions.assertThat(item.getItemId()).isNotNull();
+        assertThat(item.getItemId()).isNotNull();
 
         Item findItem = itemRepository.findById(item.getItemId());
-        Assertions.assertThat(findItem).isEqualTo(item);
-        Assertions.assertThat(findItem.getItemImageList().size()).isEqualTo(1);
+        assertThat(findItem).isEqualTo(item);
+        assertThat(findItem.getItemImageList().size()).isEqualTo(1);
 
     }
 
     @Test
     @Transactional
     void update() throws InterruptedException {
-        itemRepository.save(item);
         String updateName = "updateName";
         item.setName(updateName);
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         itemRepository.update(item);
         Item findItem = itemRepository.findById(item.getItemId());
-        Assertions.assertThat(findItem.getName()).isEqualTo(updateName);
-        Assertions.assertThat(findItem.getCreateDate()).isNotEqualTo(findItem.getUpdateDate());
+        assertThat(findItem.getName()).isEqualTo(updateName);
+        assertThat(findItem.getCreateDate()).isNotEqualTo(findItem.getUpdateDate());
     }
 
     @Test
     @Transactional
     void delete(){
-        itemRepository.save(item);
         Item findItem = itemRepository.findById(item.getItemId());
-        Assertions.assertThat(findItem).isNotNull();
+        assertThat(findItem).isNotNull();
         itemRepository.delete(item.getItemId());
         Item deleteItem = itemRepository.findById(item.getItemId());
-        Assertions.assertThat(deleteItem).isNull();
+        assertThat(deleteItem).isNull();
     }
 
     @Test
@@ -85,10 +84,10 @@ class MyBatisItemRepositoryTest {
         SearchCond cond = new SearchCond();
         cond.setPage(count%9 == 0 ? count/9 : count/9+1);
         cond.setPageSize(9);
-        PageHandler ph = new PageHandler(count, 10, cond);
+        PageHandlerVO ph = new PageHandlerVO(count, 10, cond);
         List<Item> findList = itemRepository.findAll(ph);
 
         ItemImage itemImage = findList.get(findList.size()-1).getItemImageList().get(0);
-        Assertions.assertThat(itemImage).isNotNull();
+        assertThat(itemImage).isNotNull();
     }
 }

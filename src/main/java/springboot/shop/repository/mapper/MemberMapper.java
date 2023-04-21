@@ -2,8 +2,7 @@ package springboot.shop.repository.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import springboot.shop.domain.Member;
-import springboot.shop.domain.PageHandler;
-import springboot.shop.domain.SearchCond;
+import springboot.shop.domain.PageHandlerVO;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface MemberMapper {
 
     Member findByEmail(String email);
 
-    List<Member> findAll(PageHandler ph);
+    List<Member> findAll(PageHandlerVO ph);
 
     void update(Member member);
 

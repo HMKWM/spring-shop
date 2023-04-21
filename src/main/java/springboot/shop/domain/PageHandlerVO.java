@@ -1,10 +1,9 @@
 package springboot.shop.domain;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
-public class PageHandler {
+@Getter
+public class PageHandlerVO {
     private SearchCond cond;
     private int totalCnt;
     private int naviSize;
@@ -14,7 +13,7 @@ public class PageHandler {
     private boolean showPrev;
     private boolean showNext;
 
-    public PageHandler(int totalCnt, int naviSize, SearchCond cond){
+    public PageHandlerVO(int totalCnt, int naviSize, SearchCond cond){
         this.totalCnt = totalCnt;
         this.naviSize = naviSize;
         this.cond = cond;

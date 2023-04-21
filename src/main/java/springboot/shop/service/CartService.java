@@ -14,8 +14,7 @@ import java.util.List;
 public class CartService {
 
     private final CartItemRepository cartItemRepository;
-
-    public void saveCartItem(CartItem cartItem){
+    public void addCartItem(CartItem cartItem){
         cartItemRepository.save(cartItem);
     }
 

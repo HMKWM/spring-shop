@@ -4,14 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 public class ItemForm {
     @NotBlank
     private String name;
-    @NotBlank
+    @NotNull
     private Integer price;
-    @NotBlank
+    @NotNull
     private Integer quantity;
     @NotBlank
     private String content;

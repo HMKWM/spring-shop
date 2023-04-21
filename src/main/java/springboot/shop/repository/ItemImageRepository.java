@@ -7,5 +7,7 @@ public interface ItemImageRepository {
 
     void update(ItemImage itemImage);
 
+    void disconnectItemImage(Long itemId, Integer order);
+
     void delete(Long id);
 }
