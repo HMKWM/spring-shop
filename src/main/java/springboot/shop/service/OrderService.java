@@ -28,6 +28,10 @@ public class OrderService {
         orderItemRepository.save(order.getOrderId(), orderItemList);
     }
 
+    public Order getOrder(Long orderId){
+        return orderRepository.findById(orderId);
+    }
+
     public List<Order> getOrderList(Long memberId){
         return orderRepository.findByMemberId(memberId);
     }

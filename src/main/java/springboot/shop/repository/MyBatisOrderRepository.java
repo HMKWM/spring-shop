@@ -23,6 +23,11 @@ public class MyBatisOrderRepository implements OrderRepository{
     }
 
     @Override
+    public Order findById(Long orderId) {
+        return orderMapper.findById(orderId);
+    }
+
+    @Override
     public List<Order> findByMemberId(Long memberId) {
         return orderMapper.findByMemberId(memberId);
     }

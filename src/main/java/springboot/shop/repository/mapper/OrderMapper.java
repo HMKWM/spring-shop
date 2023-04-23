@@ -10,6 +10,9 @@ import java.util.Map;
 public interface OrderMapper {
 
     void save(Order order);
+
+    Order findById(Long orderId);
+
     List<Order> findByMemberId(Long memberId);
 
     List<Order> findAll();

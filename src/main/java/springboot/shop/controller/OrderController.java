@@ -49,12 +49,35 @@ public class OrderController {
     }
 
     @GetMapping
-    public String orderPage(@AuthenticationPrincipal MemberAdaptor memberAdaptor, Model model){
+    public String orderListPage(@AuthenticationPrincipal MemberAdaptor memberAdaptor, Model model){
         Member member = memberAdaptor.getMember();
 
         List<Order> orderList = orderService.getOrderList(member.getMemberId());
         model.addAttribute("orderList", orderList);
         return "orderList";
+    }
+    @GetMapping("/{orderId}")
+    public String orderPage(@AuthenticationPrincipal MemberAdaptor memberAdaptor, Model model,
+                                  @PathVariable Long orderId){
+        Member member = memberAdaptor.getMember();
+        Role role = member.getRole();
+
+        if(role == Role.ADMIN){
+            Order order = orderService.getOrder(orderId);
+            model.addAttribute("order", order);
+            return "order";
+        } else {
+            Long orderOwner = orderService.getOrderOwner(orderId);
+            Long memberId = member.getMemberId();
+            if(orderOwner == memberId){
+                Order order = orderService.getOrder(orderId);
+                model.addAttribute("order", order);
+                return "order";
+            } else {
+                //redirectAttribute.addAttribute();
+                return "redirect:/";
+            }
+        }
     }
 
     @GetMapping("/manage")

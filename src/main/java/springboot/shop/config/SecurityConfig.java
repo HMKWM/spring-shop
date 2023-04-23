@@ -21,7 +21,7 @@ public class SecurityConfig{
         //authentication
         http.authorizeHttpRequests()
                 .antMatchers("/", "/signup", "/login","/images/**").permitAll()
-                .antMatchers("/manage", "/orders/**/reject", "/items/add").hasRole("ADMIN")
+                .antMatchers("/manage", "/orders/*/reject", "/items/**").hasRole("ADMIN")
                 .antMatchers("/carts/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers().hasRole("ADMIN")
                 .anyRequest().authenticated();

@@ -64,7 +64,7 @@
     <tr>
       <th colspan="5">
         <div style="display: flex; justify-content: space-between;">
-          <div>주문 번호 : <span th:text="${order.orderId}"></span></div>
+          <div>주문 번호 : <a th:href="@{'/orders/'+${order.orderId}}"><span th:text="${order.orderId}"></span></a></div>
           <div>
             <button class="btn btn-dark btn-sm" th:if="${order.status.toString()=='ORDER'}" th:data-order_id="${order.orderId}" onclick="cancelOrderConfirm(this)">주문 취소</button>
             <a class="cancel" th:if="${order.status.toString()=='CANCEL'}" th:data-order_id="${order.orderId}" onclick="deleteOrderConfirm(this)">주문 삭제</a>

@@ -65,7 +65,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}/update")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public String updateItemPage(@PathVariable Long itemId, Model model){
         Item item = itemService.findItem(itemId);
         model.addAttribute("item",item);
@@ -74,7 +74,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/update")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public String updateItem(@PathVariable Long itemId, @ModelAttribute @Valid ItemForm itemForm, BindingResult bindingResult,
                              @RequestPart(value="itemImg") List<MultipartFile> itemImgList){
         if(bindingResult.hasErrors()){
@@ -89,7 +89,7 @@ public class ItemController {
     }
     
     @DeleteMapping("/{itemId}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity deleteItem(@PathVariable Long itemId){
 
         itemService.delete(itemId);

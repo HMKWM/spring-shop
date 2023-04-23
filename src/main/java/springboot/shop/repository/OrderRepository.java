@@ -8,6 +8,8 @@ import java.util.List;
 public interface OrderRepository {
 
     Order save(Order order);
+    Order findById(Long orderId);
+
     List<Order> findByMemberId(Long memberId);
 
     List<Order> findAll();
