@@ -16,13 +16,12 @@
         select member_id, email, password, name, address, role
         from member
         <where>
-            <if test="cond.keyword != null">
-                and title like concat('%', #{cond.keyword}, '%')
+            <if test="keyword != null">
+                and name like concat('%', #{keyword}, '%')
             </if>
             and role != 'ADMIN'
         </where>
-        limit #{cond.offset}, #{cond.pageSize}
-        order by create_date desc;
+        limit #{offset}, #{pageSize}
     </select>
     <update id="update">
         update member
@@ -33,7 +32,7 @@
         where member_id = #{memberId}
     </update>
     <delete id="delete">
-        delete from member where member_id = #{id} and role != 'ADMIN'
+        delete from member where member_id = #{id}
     </delete>
     <select id="count" resultType="Integer">
         select count(*) from member where role != 'ADMIN'

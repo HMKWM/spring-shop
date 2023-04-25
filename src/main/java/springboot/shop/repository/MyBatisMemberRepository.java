@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import springboot.shop.domain.Member;
 import springboot.shop.domain.PageHandlerVO;
+import springboot.shop.domain.SearchCond;
 import springboot.shop.repository.mapper.MemberMapper;
 
 import java.util.List;
@@ -32,8 +33,8 @@ public class MyBatisMemberRepository implements MemberRepository{
     }
 
     @Override
-    public List<Member> findAll(PageHandlerVO ph) {
-        return memberMapper.findAll(ph);
+    public List<Member> findAll(SearchCond cond) {
+        return memberMapper.findAll(cond);
     }
 
     @Override

@@ -40,13 +40,15 @@ public class MemberService implements UserDetailsService{
     }
 
     public List<Member> findAll(SearchCond cond){
-        int pageSize = 10;
-        int naviSize = 10;
-        int count = memberRepository.count();
+        return memberRepository.findAll(cond);
+    }
 
-        cond.setPageSize(pageSize);
-        PageHandlerVO ph = new PageHandlerVO(count, naviSize, cond);
-        return memberRepository.findAll(ph);
+    public int count(){
+        return memberRepository.count();
+    }
+
+    public void deleteMember(Long memberId){
+        memberRepository.delete(memberId);
     }
 
     @Override

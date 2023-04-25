@@ -2,13 +2,15 @@ package springboot.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import springboot.shop.domain.Member;
-import springboot.shop.domain.MemberForm;
-import springboot.shop.domain.SearchCond;
+import springboot.shop.domain.*;
 import springboot.shop.service.MemberService;
 
 import javax.validation.Valid;
@@ -21,6 +23,14 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @ModelAttribute("member")
+    public Member member(@AuthenticationPrincipal MemberAdaptor memberAdaptor){
+        if(memberAdaptor == null){
+            return null;
+        }
+        return memberAdaptor.getMember();
+    }
 
     @GetMapping("/signup")
     public String registerForm(Model model){
@@ -51,10 +61,28 @@ public class MemberController {
     }
 
     @GetMapping("/members")
-    public String manageMember(@ModelAttribute SearchCond cond, Model model){
-        List<Member> memberList = memberService.findAll(cond);
-        model.addAttribute("memberList", memberList);
+    public String manageMember(@RequestParam(defaultValue="1" ,required = false) Integer page,
+                               Model model){
 
-        return "manageMember";
+        SearchCond cond = new SearchCond();
+        cond.setPage(page);
+        cond.setPageSize(10);
+        cond.setKeyword("");
+        int count = memberService.count();
+        List<Member> memberList = memberService.findAll(cond);
+
+        PageHandlerVO ph = new PageHandlerVO(count, 10, cond);
+
+        model.addAttribute("memberList", memberList);
+        model.addAttribute("ph", ph);
+
+        return "memberManage";
+    }
+
+    @DeleteMapping("/members/{memberId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity deleteMember(@PathVariable Long memberId){
+        memberService.deleteMember(memberId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -69,14 +69,13 @@
         const token = document.querySelector('meta[name="_csrf"]').content;
 
         fetch("/carts/[[${item.itemId}]]",{
-            method:"Post",
+            method:"POST",
             headers: {
                 "header": header,
                 "Content-Type": "application/json",
                 "X-CSRF-Token": token
             },
             body:JSON.stringify({
-                memberId:document.querySelector("#memberId"),
                 count:document.querySelector("#count").value
             })
         }).then(response=>{
