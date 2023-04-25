@@ -30,14 +30,16 @@ public class ItemController {
 
     @ModelAttribute("member")
     public Member member(@AuthenticationPrincipal MemberAdaptor memberAdaptor){
+        if(memberAdaptor == null){
+            return null;
+        }
         return memberAdaptor.getMember();
     }
 
     @GetMapping("/{itemId}")
-    public String item(@AuthenticationPrincipal MemberAdaptor memberAdaptor, @PathVariable Long itemId, Model model){
+    public String item(@PathVariable Long itemId, Model model){
         Item item = itemService.findItem(itemId);
 
-        model.addAttribute("member", memberAdaptor.getMember());
         model.addAttribute("item",item);
 
         return "item";
@@ -65,7 +67,6 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}/update")
-//    @PreAuthorize("hasRole('ADMIN')")
     public String updateItemPage(@PathVariable Long itemId, Model model){
         Item item = itemService.findItem(itemId);
         model.addAttribute("item",item);
@@ -74,7 +75,6 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/update")
-//    @PreAuthorize("hasRole('ADMIN')")
     public String updateItem(@PathVariable Long itemId, @ModelAttribute @Valid ItemForm itemForm, BindingResult bindingResult,
                              @RequestPart(value="itemImg") List<MultipartFile> itemImgList){
         if(bindingResult.hasErrors()){
@@ -89,7 +89,7 @@ public class ItemController {
     }
     
     @DeleteMapping("/{itemId}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity deleteItem(@PathVariable Long itemId){
 
         itemService.delete(itemId);

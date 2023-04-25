@@ -27,7 +27,7 @@
             </th:block>
             <th:block th:unless="${member == null}">
             <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
-                <li class="nav-link px-2 text-white"><span th:text="${member.name}+'님'"></span></li>
+                <li class="nav-link px-2 text-white"><span id="memberId" th:data="${member.memberId}" th:text="${member.name}+'님'"></span></li>
                 <li class="nav-link px-2 text-white logout"><span onclick="location.href='/logout'">로그아웃</span></li>
             </ul>
             </th:block>

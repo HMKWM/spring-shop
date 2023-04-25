@@ -20,9 +20,9 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //authentication
         http.authorizeHttpRequests()
-                .antMatchers("/", "/signup", "/login","/images/**").permitAll()
-                .antMatchers("/manage", "/orders/*/reject", "/items/**").hasRole("ADMIN")
-                .antMatchers("/carts/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/", "/signup", "/login","/images/**", "/items/*").permitAll()
+                .antMatchers("/manage", "/orders/*/reject", "/items/*/add", "/items/*/update").hasRole("ADMIN")
+                .antMatchers("/carts/*").hasAnyRole("ADMIN", "USER")
                 .antMatchers().hasRole("ADMIN")
                 .anyRequest().authenticated();
 
@@ -44,8 +44,6 @@ public class SecurityConfig{
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        //web security
-        //우선 순위가 높음
         return (web) -> web.ignoring()
                 .antMatchers("/css/**", "/*.ico", "/error", "/images/**");
     }

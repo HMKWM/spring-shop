@@ -32,8 +32,10 @@
                                 <input type="hidden" id="price" th:value="${item.price}" />
                                 <input type="hidden" id="item-id" th:value="${item.itemId}" />
                             </div>
+                            <th:block th:if="${member != null}">
                             <button type="button" class="btn btn-primary mb-3" onclick="addOrder()">구매하기</button>
                             <button type="button" class="btn btn-primary mb-3" onclick="addCart()">장바구니</button>
+                            </th:block>
                         </form>
                     </div>
                 </div>
@@ -47,8 +49,8 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-8 left-buttons d-flex justify-content-end">
-                <a th:href="@{${item.itemId}+'/update'}">
+            <div th:if="${member != null && member.getRole() == 'ADMIN'}" class="col-md-8 left-buttons d-flex justify-content-end">
+                <a>
                 <button style="margin-right: 5px" class="btn btn-primary" onclick="">글 수정</button>
                 </a>
                 <button class="btn btn-danger" onclick="deleteConfirm()">글 삭제</button>
@@ -74,7 +76,7 @@
                 "X-CSRF-Token": token
             },
             body:JSON.stringify({
-                memberId:[[${member.memberId}]],
+                memberId:document.querySelector("#memberId"),
                 count:document.querySelector("#count").value
             })
         }).then(response=>{
